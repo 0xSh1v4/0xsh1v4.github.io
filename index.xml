@@ -7,19 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sun, 28 Sep 2014 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 01 Sep 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://0xSh1v4.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Creating a New Theme</title>
-      <link>https://0xSh1v4.github.io/posts/2014/09/creating-a-new-theme/</link>
-      <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
+      <title>Tryhackme- Anonymous Writeup</title>
+      <link>https://0xSh1v4.github.io/posts/2020/09/tryhackme-anonymous-writeup/</link>
+      <pubDate>Tue, 01 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://0xSh1v4.github.io/posts/2014/09/creating-a-new-theme/</guid>
-      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.
-We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
+      <guid>https://0xSh1v4.github.io/posts/2020/09/tryhackme-anonymous-writeup/</guid>
+      <description>Scanning and Enumeration of the network nmap -sC -sV -sS -oA res -p1-65535 10.10.237.45
+masscan -p1-65535 10.10.237.45 &amp;ndash;rate=1000 -e tun0
+┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]└─$ sudo nmap -sC -sV -sS -oA res 10.10.237.45 Starting Nmap 7.80 ( https://nmap.org ) at 2020-08-27 17:07 CESTNmap scan report for 10.10.237.45Host is up (0.069s latency).Not shown: 996 closed portsPORT STATE SERVICE VERSION21/tcp open ftp vsftpd 2.0.8 or later| ftp-anon: Anonymous FTP login allowed (FTP code 230)|_drwxrwxrwx 2 111 113 4096 Jun 04 19:26 scripts [NSE: writeable]| ftp-syst: | STAT: | FTP server status:| Connected to ::ffff:10.</description>
     </item>
     
     <item>
