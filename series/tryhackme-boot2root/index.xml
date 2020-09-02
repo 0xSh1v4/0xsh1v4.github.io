@@ -18,9 +18,8 @@
       <pubDate>Tue, 01 Sep 2020 00:00:00 +0000</pubDate>
       
       <guid>https://0xSh1v4.github.io/posts/2020/09/tryhackme-anonymous-writeup/</guid>
-      <description>Scanning and Enumeration of the network nmap -sC -sV -sS -oA res -p1-65535 10.10.237.45
-masscan -p1-65535 10.10.237.45 &amp;ndash;rate=1000 -e tun0
-┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]└─$ sudo nmap -sC -sV -sS -oA res 10.10.237.45 Starting Nmap 7.80 ( https://nmap.org ) at 2020-08-27 17:07 CESTNmap scan report for 10.10.237.45Host is up (0.069s latency).Not shown: 996 closed portsPORT STATE SERVICE VERSION21/tcp open ftp vsftpd 2.0.8 or later| ftp-anon: Anonymous FTP login allowed (FTP code 230)|_drwxrwxrwx 2 111 113 4096 Jun 04 19:26 scripts [NSE: writeable]| ftp-syst: | STAT: | FTP server status:| Connected to ::ffff:10.</description>
+      <description>The following write up is for the machine: Anonymous
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</description>
     </item>
     
   </channel>
