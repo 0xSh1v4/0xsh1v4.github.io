@@ -20,7 +20,7 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
             <content type="html"><![CDATA[<p>The following write up is for the machine: Anonymous</p>
 <p><a href="https://www.tryhackme.com">Tryhackme</a> is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</p>
 <h2 id="synopsis">Synopsis</h2>
-<p><em>Anonymous</em> is the typical boot2root machine where we need to find two flags in the machine. It comes with an interesting part that explains the exploitation via FTP server to get the reverse shell by which we can obtain a user flag.And the privilege escalation done via weak SUID permissions by which we will obtain our root flag.</p>
+<p><a href="https://tryhackme.com/room/anonymous">Anonymous</a> is the typical boot2root machine where we need to find two flags in the machine. It comes with an interesting part that explains the exploitation via FTP server to get the reverse shell by which we can obtain a user flag.And the privilege escalation done via weak SUID permissions by which we will obtain our root flag.</p>
 <h2 id="scanning-and-enumeration-of-the-network">Scanning and Enumeration of the network</h2>
 <p>As usual, let us run the nmap tool to can the target network.</p>
 <pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]
