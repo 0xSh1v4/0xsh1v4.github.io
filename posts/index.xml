@@ -542,7 +542,7 @@ wrote extracted data to &quot;rabbit_hole.txt&quot;.
 ┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Blog]
 └─$ cat rabbit_hole.txt 
 You've found yourself in a rabbit hole, friend.
-</code></pre><h2 id="enumerating-the-network">Enumerating the network</h2>
+</code></pre><h2 id="exploiting-the-network">Exploiting the network</h2>
 <p>So, I have tried enumerating the user <em>bjoel</em> with rockyou. But doesn&rsquo;t get anything.</p>
 <p>So, I tried the <em>wpscanner</em> with <strong>-e</strong>  and <strong>u</strong> flag which tells wpscan to enumerate the user IDs</p>
 <p>wp enumeration:</p>
@@ -695,6 +695,7 @@ You won't find what you're looking for here.
 
 TRY HARDER
 </code></pre><p>So, the user flag is not there.</p>
+<h2 id="privilege-escalation">Privilege Escalation</h2>
 <figure>
     <img src="/Tryhackme/Blog/6.png"
          alt="Tryhackme: Blog machine - SUID Binary List"/> <figcaption>

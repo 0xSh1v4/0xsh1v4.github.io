@@ -47,7 +47,7 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
 Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.">
 <meta itemprop="datePublished" content="2020-09-07T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-09-07T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2010">
+<meta itemprop="wordCount" content="2012">
 <meta itemprop="image" content="https://0xSh1v4.github.io"/>
 
 
@@ -372,7 +372,7 @@ wrote extracted data to &quot;rabbit_hole.txt&quot;.
 ┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Blog]
 └─$ cat rabbit_hole.txt 
 You've found yourself in a rabbit hole, friend.
-</code></pre><h2 id="enumerating-the-network">Enumerating the network</h2>
+</code></pre><h2 id="exploiting-the-network">Exploiting the network</h2>
 <p>So, I have tried enumerating the user <em>bjoel</em> with rockyou. But doesn&rsquo;t get anything.</p>
 <p>So, I tried the <em>wpscanner</em> with <strong>-e</strong>  and <strong>u</strong> flag which tells wpscan to enumerate the user IDs</p>
 <p>wp enumeration:</p>
@@ -525,6 +525,7 @@ You won't find what you're looking for here.
 
 TRY HARDER
 </code></pre><p>So, the user flag is not there.</p>
+<h2 id="privilege-escalation">Privilege Escalation</h2>
 <figure>
     <img src="https://0xSh1v4.github.io/Tryhackme/Blog/6.png"
          alt="Tryhackme: Blog machine - SUID Binary List"/> <figcaption>
@@ -613,7 +614,7 @@ uid=0(root) gid=33(www-data) groups=33(www-data)
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        2010 Words
+        2012 Words
       </p>
 
       <p>
