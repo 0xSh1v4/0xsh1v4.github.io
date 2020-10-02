@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://0xSh1v4.github.io/posts/2020/10/hackthebox-blunder-writeup/</loc>
+    <lastmod>2020-10-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://0xSh1v4.github.io/posts/2020/09/tryhackme-brooklyn-99-writeup/</loc>
     <lastmod>2020-09-19T00:00:00+00:00</lastmod>
   </url>
@@ -39,7 +44,7 @@
   
   <url>
     <loc>https://0xSh1v4.github.io/</loc>
-    <lastmod>2020-09-19T00:00:00+00:00</lastmod>
+    <lastmod>2020-10-02T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
@@ -53,13 +58,18 @@
   </url>
   
   <url>
+    <loc>https://0xSh1v4.github.io/series/hackthebox-boot2root/</loc>
+    <lastmod>2020-10-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://0xSh1v4.github.io/posts/</loc>
-    <lastmod>2020-09-19T00:00:00+00:00</lastmod>
+    <lastmod>2020-10-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://0xSh1v4.github.io/series/</loc>
-    <lastmod>2020-09-19T00:00:00+00:00</lastmod>
+    <lastmod>2020-10-02T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"

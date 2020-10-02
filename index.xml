@@ -7,10 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sat, 19 Sep 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 02 Oct 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://0xSh1v4.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>HackTheBox- Blunder Writeup</title>
+      <link>https://0xSh1v4.github.io/posts/2020/10/hackthebox-blunder-writeup/</link>
+      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://0xSh1v4.github.io/posts/2020/10/hackthebox-blunder-writeup/</guid>
+      <description>Machine IP : 10.10.10.191
+This following write up is for the machine: Blunder
+Hack the Box is an online CTF platform where you can hone your penetration testing skills. It’s similar to boot2root machines. The goal is to find two flags namely, User flag and Root flag to successfully root the machine.
+Synopsis Blunder is the easy boot2root machine where we need to find two flags in the machine. Enumeration is the key and this machines does require a bit of enumeration and exploiting the specific CMS version and then getting the initial foothold, later it becomes easy and escaltion to root is very simple could be done by popular SUDO exploit.</description>
+    </item>
     
     <item>
       <title>Tryhackme- Brooklyn-99 Writeup</title>
